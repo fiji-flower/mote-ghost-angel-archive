@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#16121e">
+  <meta name="description" content="Explore Moté’s growing ghost-angel family and Petal Lucent’s collectible digital illustration commissions.">
+  <title>Ghost Angel Archive · NACREVOID</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="preload" as="image" href="./assets/family.webp" fetchpriority="high">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./collection.js" defer></script>
+  <script src="./archive.js" defer></script>
+  <script src="./mote-viewer.js" defer></script>
+</head>
+<body id="top">
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 1.5c.8 6.6 3.9 9.7 10.5 10.5-6.6.8-9.7 3.9-10.5 10.5C11.2 15.9 8.1 12.8 1.5 12 8.1 11.2 11.2 8.1 12 1.5Z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-collection" viewBox="0 0 24 24"><rect x="3.2" y="3.2" width="7.1" height="7.1" rx="1.1"/><rect x="13.7" y="3.2" width="7.1" height="7.1" rx="1.1"/><rect x="3.2" y="13.7" width="7.1" height="7.1" rx="1.1"/><rect x="13.7" y="13.7" width="7.1" height="7.1" rx="1.1"/></symbol>
+      <symbol id="i-pencil" viewBox="0 0 24 24"><path d="m4 16-1 5 5-1 12-12a2.3 2.3 0 0 0-4-4L4 16Z"/><path d="m13.8 6.2 4 4M4 16l4 4"/></symbol>
+      <symbol id="i-ghost" viewBox="0 0 24 24"><path d="M4.5 14.5C4.5 9.4 7 6 12 6s7.5 3.4 7.5 8.5V20c-1.8 0-2.3-1.9-3.8-1.9S13.8 21 12 21s-2.4-2.9-3.9-2.9-1.8 1.9-3.6 1.9Z"/><path d="M8.1 12.4q1 1.9 2.1 0m3.6 0q1 1.9 2.1 0"/><ellipse cx="12" cy="2.8" rx="4.3" ry="1.2"/></symbol>
+      <symbol id="i-move" viewBox="0 0 24 24"><path d="M4 12h16m-4-4 4 4-4 4M8 8l-4 4 4 4"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8.5 5.5v13m7-13v13" stroke-width="3"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 10 7-10 7Z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5m11 11h5v-5m0-6V4h-5M4 15v5h5"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"/></symbol>
+      <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m12 3 1.7 6.7L21 12l-7.3 2.1L12 21l-2.1-6.9L3 12l6.9-2.3Z"/><path d="m19 2 .6 2.3L22 5l-2.4.6L19 8l-.6-2.4L16 5l2.4-.7Z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M15 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+    </defs>
+  </svg>
+  <a class="skip-link" href="#main">Skip to archive</a>
+  <aside class="rail" aria-label="Artist sidebar">
+    <div class="rail-top">
+      <a class="brand" href="#top" aria-label="NACREVOID home">NACREVOID</a>
+      <div class="byline">Studio of <span data-artist>Petal Lucent</span></div>
+    </div>
+    <button id="menu-toggle" class="mobile-menu icon-btn" type="button" aria-expanded="false" aria-controls="rail-nav" aria-label="Open navigation"><svg class="icon"><use href="#i-menu"/></svg></button>
+    <div class="rail-center">
+      <section class="specimen" aria-labelledby="specimen-title">
+        <div class="viewer">
+          <div class="viewer-plane" aria-hidden="true"></div>
+          <div class="viewer-brackets" aria-hidden="true"></div>
+          <div class="viewer-orbit o1" aria-hidden="true"></div><div class="viewer-orbit o2" aria-hidden="true"></div>
+          <canvas id="mote-model" width="430" height="400" tabindex="0" role="img" aria-label="Three-dimensional Moté. Drag or use the arrow keys to rotate the sculpture."><img src="./favicon.svg" alt="Moté’s sleeping ghost and halo"></canvas>
+          <button id="mote-motion" class="motion icon-btn" type="button" aria-label="Pause rotation" aria-pressed="false"><svg class="icon pause"><use href="#i-pause"/></svg><svg class="icon play"><use href="#i-play"/></svg></button>
+        </div>
+        <div class="specimen-label"><span class="specimen-name" id="specimen-title">Moté</span><span class="id-tag">GA–000</span></div>
+        <p class="specimen-role">The founding ghost</p>
+        <p class="rotate-hint"><svg class="icon"><use href="#i-move"/></svg> Drag to rotate</p>
+      </section>
+    </div>
+    <nav id="rail-nav" class="rail-nav" aria-label="Archive navigation">
+      <a href="#collection" data-nav="collection" aria-current="location"><svg class="icon"><use href="#i-collection"/></svg> Collection</a>
+      <a href="#commissions" data-nav="commissions"><svg class="icon"><use href="#i-pencil"/></svg> Commissions</a>
+      <button type="button" id="meet-mote"><svg class="icon"><use href="#i-ghost"/></svg> Meet Moté</button>
+    </nav>
+    <div class="rail-foot"><span class="small-star" aria-hidden="true">✧</span><span>Independent artist studio</span></div>
+  </aside>
+  <main id="main" class="main" tabindex="-1">
+    <header class="masthead">
+      <div class="crumb"><svg class="icon"><use href="#i-star"/></svg><span>Artist archive</span><span class="slash">/</span><b>Collection 01</b></div>
+      <a class="release-link" href="#commissions"><span class="status-light"></span><span id="header-slots">First drop · 3 slots</span></a>
+    </header>
+    <section class="hero" aria-labelledby="hero-title">
+      <img class="hero-art" src="./assets/family.webp" alt="A family of soft ghost angels and crooked silver halos in a moonlit, opalescent garden." fetchpriority="high">
+      <div class="hero-scrim"></div>
+      <div class="hero-content">
+        <div class="series-tag"><span class="spark-mark" aria-hidden="true">✧</span> Series 01 <span class="tag-divider"></span> <span data-series>First Light</span></div>
+        <h1 id="hero-title"><span>Ghost Angel</span><em>Archive</em></h1>
+        <p>A growing family of collectible ghost angels, born from one hand-sewn spirit named Moté.</p>
+        <div class="hero-actions"><a class="btn btn-opal" href="#collection"><svg class="icon"><use href="#i-collection"/></svg>Explore collection</a><a class="hero-offer" href="#commissions"><span class="price-text">$55</span> commissions</a></div>
+      </div>
+      <span class="hero-corner" aria-hidden="true"></span>
+    </section>
+    <section class="collection" id="collection" aria-labelledby="collection-title">
+      <div class="section-head">
+        <div class="collection-heading"><div class="overline"><span class="horizontal-line"></span> Ghost-family concept studies</div><h2 id="collection-title">The collection</h2></div>
+        <div class="filters" id="filters" role="group" aria-label="Filter archive entries"></div>
+      </div>
+      <p id="filter-status" class="sr-only" aria-live="polite"></p>
+      <div id="gallery" class="gallery"></div>
+      <noscript><p class="noscript">Enable JavaScript to explore each character and prepare a commission brief.</p></noscript>
+      <div class="gallery-end"><span id="gallery-count"></span><span class="end-line"></span><button id="load-more" type="button" class="text-button" hidden>Load more entries</button></div>
+    </section>
+    <section id="commissions" class="offer glass" aria-labelledby="offer-title">
+      <div class="offer-top">
+        <div><div class="overline"><svg class="icon"><use href="#i-pencil"/></svg> Commission release</div><h2 id="offer-title">The Binding Contract</h2><p class="offer-intro">Give your ghost a palette and one personal motif. <span data-artist>Petal Lucent</span> will draw it in the signature Ghost Angel style.</p></div>
+        <div class="offer-price"><strong class="price-text">$55</strong><span>USD / order</span></div>
+      </div>
+      <div class="scope-grid">
+        <div class="scope"><h3>In your collection</h3><ul>
+          <li>One single-character portrait in one pose with a simple backdrop. Full-resolution <span id="portrait-size">2,400 × 3,000</span> px PNG.</li>
+          <li>A numbered <span id="card-size">1,500 × 2,100</span> px collector-card PNG using the same art, with your ghost’s name and one line of lore.</li>
+          <li>One small color or motif adjustment at the sketch stage. Digital files for personal use.</li>
+        </ul></div>
+        <div class="scope"><h3>Outside this offer</h3><ul>
+          <li>Physical plushies, prints, shipping, and editable source files.</li>
+          <li>Extra characters, alternate styles, detailed scenes, redraws, and extra revisions.</li>
+          <li>Commercial use or merchandise rights.</li>
+        </ul></div>
+      </div>
+      <div class="time-cap"><svg class="icon"><use href="#i-sparkle"/></svg><span>Illustration time is capped at <strong id="time-limit">two hours per order</strong>, including the sketch adjustment.</span></div>
+      <div class="release-row">
+        <div><h3 class="slot-title" id="slots-title">Three commission slots</h3><div id="slots" class="slots"></div></div>
+        <button type="button" id="brief-open" class="btn btn-opal"><svg class="icon"><use href="#i-pencil"/></svg><span>Prepare your brief</span></button>
+      </div>
+      <p class="booking-note" id="booking-note">Bookings open soon. You can prepare and save a brief now.</p>
+    </section>
+    <footer class="page-foot"><span>NACREVOID &nbsp;/&nbsp; <span data-artist>Petal Lucent</span></span><a href="#top">Back to top</a></footer>
+  </main>
+
+  <dialog id="entry-dialog" class="modal entry-modal" aria-labelledby="entry-name">
+    <div class="entry-layout">
+      <div class="entry-image"><img id="entry-image" alt=""></div>
+      <div class="entry-copy">
+        <button type="button" class="close-modal icon-btn" aria-label="Close character"><svg class="icon"><use href="#i-close"/></svg></button>
+        <div class="overline" id="entry-id"></div><h2 id="entry-name"></h2><p class="entry-story" id="entry-story"></p>
+        <dl class="entry-facts"><div><dt>Palette</dt><dd id="entry-palette"></dd></div><div><dt>Signature detail</dt><dd id="entry-detail"></dd></div></dl>
+        <p id="entry-credit" class="entry-credit"></p>
+        <div class="entry-pager"><button type="button" class="text-button" id="prev-entry">Previous</button><span id="entry-position"></span><button type="button" class="text-button" id="next-entry">Next</button></div>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="brief-dialog" class="modal brief-modal" aria-labelledby="brief-title">
+    <div class="brief-inner">
+      <button type="button" class="close-modal icon-btn" aria-label="Close commission brief"><svg class="icon"><use href="#i-close"/></svg></button>
+      <div class="overline">The Binding Contract <span class="slash">/</span> <span class="price-text">$55</span></div>
+      <h2 id="brief-title">Your ghost brief</h2>
+      <p class="brief-intro" id="brief-intro">Choose a palette and one personal motif for your ghost. Keep a copy for when bookings open.</p>
+      <form id="brief-form">
+        <label>Ghost name <span>(optional)</span><input id="ghost-name" name="ghostName" maxlength="64" placeholder="Name your little ghost" autocomplete="off"></label>
+        <label>Color palette<input id="ghost-palette" name="palette" maxlength="120" placeholder="e.g. Opal pink and bruised violet" required></label>
+        <label>One personal motif<textarea id="ghost-motif" name="motif" maxlength="260" rows="2" placeholder="e.g. A halo made from my first guitar string" required></textarea></label>
+        <div class="brief-actions"><button class="btn btn-opal" type="submit" id="copy-brief"><svg class="icon"><use href="#i-copy"/></svg>Copy brief</button><button class="btn btn-outline" type="button" id="save-brief">Download .txt</button><a id="contact-link" class="btn btn-opal" hidden>Contact the artist</a></div>
+        <p id="brief-result" class="form-result" role="status"></p>
+      </form>
+      <p class="brief-foot" id="brief-foot">A saved brief stays with you. Petal Lucent confirms each slot directly.</p>
+    </div>
+  </dialog>
+</body>
+</html>
