@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./styles.css">
   <script src="./collection.js" defer></script>
   <script src="./archive.js" defer></script>
+  <script src="./ritual.js" defer></script>
   <script src="./mote-viewer.js" defer></script>
 </head>
 <body id="top">
@@ -71,6 +72,7 @@
         <h1 id="hero-title"><span>Ghost Angel</span><em>Archive</em></h1>
         <p>A growing family of collectible ghost angels, born from one hand-sewn spirit named Moté.</p>
         <div class="hero-actions"><a class="btn btn-opal" href="#collection"><svg class="icon"><use href="#i-collection"/></svg>Explore collection</a><a class="hero-offer" href="#commissions"><span class="price-text">$55</span> made to order</a></div>
+        <a class="hero-adopt" href="#commissions"><svg class="icon"><use href="#i-ghost"/></svg>Adopt a spirit<span class="adopt-arrow" aria-hidden="true">↓</span><span class="sr-only"> — jump to the binding contract</span></a>
       </div>
       <span class="hero-corner" aria-hidden="true"></span>
     </section>
@@ -127,20 +129,11 @@
       </div>
     </div>
   </dialog>
-  <dialog id="brief-dialog" class="modal brief-modal" aria-labelledby="brief-title">
-    <div class="brief-inner">
-      <button type="button" class="close-modal icon-btn" aria-label="Close order brief"><svg class="icon"><use href="#i-close"/></svg></button>
-      <div class="overline">The Binding Contract <span class="slash">/</span> <span class="price-text">$55</span></div>
-      <h2 id="brief-title">Your ghost brief</h2>
-      <p class="brief-intro" id="brief-intro">Name your ghost, choose a palette, and give it one personal motif. Keep a copy for when ordering opens.</p>
-      <form id="brief-form">
-        <label>Ghost name <span>(optional)</span><input id="ghost-name" name="ghostName" maxlength="64" placeholder="Name your little ghost" autocomplete="off"></label>
-        <label>Color palette<input id="ghost-palette" name="palette" maxlength="120" placeholder="e.g. Opal pink and bruised violet" required></label>
-        <label>One personal motif<textarea id="ghost-motif" name="motif" maxlength="260" rows="2" placeholder="e.g. A halo made from my first guitar string" required></textarea></label>
-        <div class="brief-actions"><button class="btn btn-opal" type="submit" id="copy-brief"><svg class="icon"><use href="#i-copy"/></svg>Copy brief</button><button class="btn btn-outline" type="button" id="save-brief">Download .txt</button><a id="contact-link" class="btn btn-opal" hidden>Contact the artist</a></div>
-        <p id="brief-result" class="form-result" role="status"></p>
-      </form>
-      <p class="brief-foot" id="brief-foot">A saved brief stays with you. Petal Lucent confirms each order directly.</p>
+  <dialog id="ga-ritual" aria-labelledby="ga-heading">
+    <div class="ga-panel">
+      <header class="ga-top"><span class="ga-brand">Ghost Angel Archive / 001</span><button type="button" class="ga-close" aria-label="Close ritual">×</button></header>
+      <div class="ga-content" id="ga-content"></div>
+      <footer class="ga-footer">Petal Lucent // Nacrevoid</footer>
     </div>
   </dialog>
 </body>

@@ -52,16 +52,12 @@
     $("slots").append(slot);
   });
   if (canInquire) {
-    $("brief-open").querySelector("span").textContent = "Order your ghost";
-    $("booking-note").textContent = artist + " confirms availability, shipping and timing before you pay.";
-    $("brief-intro").textContent = "Name your ghost, choose a palette and one personal motif. Save the details, then send them to " + artist + " to order.";
+    $("booking-note").textContent = "Answer five questions, then finish on Ko-fi. " + artist + " receives your transmission with the order.";
   } else if (!openSlots) {
-    $("booking-note").textContent = "Every spirit in this release has found a home. You can save your details for a future opening.";
-    $("brief-intro").textContent = "This release is full. Save a palette and a personal motif for the next opening.";
+    $("booking-note").textContent = "Every spirit in this release has found a home. The ritual still works, so you can keep your answers for the next opening.";
   }
 
   const entryDialog = $("entry-dialog");
-  const briefDialog = $("brief-dialog");
   const menu = $("menu-toggle");
   function closeMenu() {
     menu.setAttribute("aria-expanded", "false");
@@ -116,7 +112,7 @@
     dialog.showModal();
     dialog.querySelector(".close-modal").focus({ preventScroll: true });
   }
-  for (const dialog of [entryDialog, briefDialog]) {
+  for (const dialog of [entryDialog]) {
     dialog.querySelector(".close-modal").addEventListener("click", () => dialog.close());
     dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
     dialog.addEventListener("close", () => {
@@ -218,75 +214,4 @@
   filterGallery("All");
   markSection();
 
-  const form = $("brief-form");
-  const result = $("brief-result");
-  const contactLink = $("contact-link");
-  const briefText = () => [
-    "NACREVOID · Ghost Angel order",
-    "Artist: " + artist, "Series: " + series, "Offer: " + price + " USD",
-    "Ghost name: " + ($("ghost-name").value.trim() || "Artist’s choice"),
-    "Color palette: " + $("ghost-palette").value.trim(),
-    "Personal motif: " + $("ghost-motif").value.trim(),
-    "", "A handmade Ghost Angel, approximately 4–5 inches tall, with its own name, story and a printed, numbered collectible card.",
-    "Made to order: please allow 2–3 weeks plus delivery. Shipping within the United States is calculated at checkout.",
-    "Please confirm availability and timing."
-  ].join("\n");
-  function validateBrief() {
-    for (const field of [$("ghost-palette"), $("ghost-motif")]) {
-      field.setCustomValidity(field.value.trim() ? "" : "Please enter a few words.");
-    }
-    return form.reportValidity();
-  }
-  form.addEventListener("input", (event) => {
-    event.target.setCustomValidity?.("");
-    result.textContent = "";
-  });
-  $("brief-open").addEventListener("click", (event) => {
-    result.textContent = "";
-    openDialog(briefDialog, event.currentTarget);
-  });
-  if (canInquire) {
-    contactLink.hidden = false;
-    contactLink.textContent = contact.type === "link" ? "Open booking page" : "Open email draft";
-    contactLink.target = contact.type === "link" ? "_blank" : "_self";
-    contactLink.rel = "noopener noreferrer";
-    contactLink.href = contact.type === "link" ? contact.url : "mailto:" + contact.address;
-    contactLink.addEventListener("click", (event) => {
-      if (!validateBrief()) { event.preventDefault(); return; }
-      if (contact.type === "email") contactLink.href = "mailto:" + contact.address + "?subject=" + encodeURIComponent("Ghost Angel order request") + "&body=" + encodeURIComponent(briefText());
-    });
-  }
-  async function copyText(value) {
-    if (navigator.clipboard?.writeText) {
-      try { await navigator.clipboard.writeText(value); return true; } catch { /* Try the local-file fallback. */ }
-    }
-    const helper = document.createElement("textarea");
-    helper.value = value;
-    helper.className = "clipboard-helper";
-    helper.setAttribute("aria-label", "Ghost order brief to copy");
-    form.append(helper);
-    helper.select();
-    let copied = false;
-    try { copied = document.execCommand("copy"); } catch { /* Download remains available. */ }
-    helper.remove();
-    $("copy-brief").focus();
-    return copied;
-  }
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if (!validateBrief()) return;
-    result.textContent = await copyText(briefText()) ? "Brief copied to your clipboard." : "Copy is unavailable here. Use Download .txt to keep your brief.";
-  });
-  $("save-brief").addEventListener("click", () => {
-    if (!validateBrief()) return;
-    const url = URL.createObjectURL(new Blob([briefText() + "\n"], { type: "text/plain;charset=utf-8" }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "ghost-angel-order-brief.txt";
-    form.append(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1500);
-    result.textContent = "Your brief is ready in your downloads.";
-  });
 })();

@@ -9,7 +9,7 @@ window.MOTE_ARCHIVE = {
     // Update this only after confirming an order.
     slots: ["available", "available", "available"],
     // Set either a full https:// booking link or a public artist email to open orders.
-    bookingUrl: "",
+    bookingUrl: "https://ko-fi.com/s/2df1ab1b45",
     artistEmail: ""
   },
   entries: [
