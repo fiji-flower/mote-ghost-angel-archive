@@ -124,6 +124,11 @@ h1 em { margin-top: .045em; color: #e6c6fa; background: linear-gradient(176deg,#
 .btn-outline:hover { border-color: #a78bb5; background: rgba(153,115,176,.18); }
 .hero-offer { color: #f5e7fb; font-size: .91rem; padding: 6px 0 4px; border-bottom: 1px solid rgba(245,218,255,.55); font-weight: 520; }
 .hero-offer:hover { border-color: white; }
+.hero-adopt { display: inline-flex; align-items: center; gap: 7px; margin-top: 13px; padding: 6px 13px 6px 11px; border: 1px solid rgba(242,203,226,.34); border-radius: 99px; background: rgba(255,214,232,.05); color: #ecd6ea; font: 500 .77rem/1.2 var(--body); letter-spacing: .06em; transition: border-color .2s, background .2s, color .2s, box-shadow .2s; }
+.hero-adopt:hover { border-color: rgba(255,203,229,.72); background: rgba(255,199,226,.13); color: #fff5fb; box-shadow: 0 0 18px rgba(246,168,203,.18); }
+.hero-adopt .icon { width: 13px; height: 13px; color: #f6c9e2; }
+.hero-adopt .adopt-arrow { font-size: .8rem; opacity: .8; transition: transform .2s; }
+.hero-adopt:hover .adopt-arrow { transform: translateY(2px); }
 .hero-corner { position: absolute; bottom: 13px; right: 13px; height: 17px; width: 17px; pointer-events: none; border-right: 1px solid rgba(253,239,255,.7); border-bottom: 1px solid rgba(253,239,255,.7); }
 .collection { padding-top: clamp(28px,2.3vw,45px); }
 .section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 18px; }
@@ -195,20 +200,96 @@ h2 { margin-top: 6px; font: 630 clamp(1.65rem,2.45vw,2.65rem)/1.12 var(--body); 
 .entry-credit,.brief-foot { color: #baacc4; line-height: 1.5; font-size: .77rem; }
 .entry-credit { margin: 9px 0 17px; }
 .entry-pager { padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; font-size: .73rem; color: #b9a6c5; }
-.brief-modal { width: min(560px,calc(100vw - 26px)); }
-.brief-inner { padding: clamp(23px,3.2vw,41px); }
-.brief-inner .overline { padding-right: 21px; }
-.brief-intro { margin: 10px 0 19px; color: #d6c7df; }
-#brief-form { display: grid; gap: 13px; }
-#brief-form label { display: block; color: #eadbf3; font-size: .93rem; font-weight: 550; }
-#brief-form label span { font-weight: 400; color: #bbaec4; }
-#brief-form input,#brief-form textarea { display: block; width: 100%; color: #f5ebf9; border: 1px solid #776382; border-radius: 5px; background: rgba(112,82,129,.12); margin-top: 5px; padding: 9px 11px; font: 400 1rem/1.45 var(--body); }
-#brief-form textarea { resize: vertical; min-height: 73px; }
-#brief-form :is(input,textarea)::placeholder { color: #b6a3c1; }
-.brief-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 3px; }
-.brief-foot { border-top: 1px solid var(--line); margin-top: 15px; padding-top: 13px; }
-.form-result { color: #d7efd8; font-size: .88rem; }
-.form-result:empty { display: none; }
+/* Spirit Compatibility Ritual: the order form behind "Name your ghost". Scoped to #ga-ritual. */
+#ga-ritual { --ink:#f8f0ff; --muted:#d9cbe3; --accent:#e1c9f5; box-sizing:border-box; color:var(--ink); font:15px/1.6 system-ui,sans-serif; width:min(590px,calc(100% - 32px)); max-height:calc(100dvh - 32px); padding:0; border:1px solid #f5e3ff4d; border-radius:24px;
+  /* opal glass: Yakui's liquid-glass lab settings */
+  background:rgba(195,172,223,.3);
+  backdrop-filter:blur(0px) saturate(155%);
+  -webkit-backdrop-filter:blur(0px) saturate(155%);
+  box-shadow:inset 0 1px 0 #fff6,inset 0 -1px 0 #e3caff26,0 25px 90px #080510a6; overflow:auto; isolation:isolate; scrollbar-width:thin; scrollbar-color:#9d87ae50 transparent; transition:border-color .45s ease,box-shadow .45s ease }
+#ga-ritual:hover { border-color:#f8ecff8c; box-shadow:inset 0 1px 0 #fffa,inset 0 -1px 0 #e3caff33,inset 0 0 70px #ffffff0a,0 28px 100px #080510b3 }
+#ga-ritual::backdrop { background:#0e091984; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px) }
+#ga-ritual[open] { animation:ga-open .36s cubic-bezier(.2,.75,.25,1) both }
+#ga-ritual.ga-closing { animation:ga-close .22s ease both }
+#ga-ritual.ga-closing::backdrop { animation:ga-fade .22s ease both }
+@keyframes ga-open { from{opacity:0;transform:translateY(12px) scale(.975)} to{opacity:1;transform:none} }
+@keyframes ga-close { to{opacity:0;transform:translateY(8px) scale(.985)} }
+@keyframes ga-fade { to{opacity:0} }
+@keyframes ga-step { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
+@keyframes ga-shine { from{transform:translateX(-120%) rotate(-20deg)} to{transform:translateX(180%) rotate(-20deg)} }
+@keyframes ga-choice-sheen { from{transform:translateX(-120%) rotate(14deg)} to{transform:translateX(560%) rotate(14deg)} }
+#ga-ritual * { box-sizing:border-box }
+/* Frosted opal body: pastel film + soft iridescence, caught light on hover. */
+#ga-ritual .ga-panel { padding:clamp(20px,5vw,35px); position:relative }
+#ga-ritual .ga-panel::before { content:""; position:absolute; inset:0; pointer-events:none; z-index:-1; border-radius:inherit;
+  background:
+    radial-gradient(80% 60% at 12% 6%,#ffd6ef26,transparent 62%),
+    radial-gradient(85% 70% at 90% 94%,#cfe6ff24,transparent 66%),
+    radial-gradient(65% 55% at 74% 14%,#dcffee1f,transparent 62%),
+    radial-gradient(60% 50% at 26% 96%,#e7d4ff24,transparent 62%);
+  opacity:.7; transition:opacity .5s ease }
+/* Specular reflection that follows the pointer, plus a lit top edge. */
+#ga-ritual .ga-panel::after { content:""; position:absolute; inset:0; pointer-events:none; z-index:-1; border-radius:inherit;
+  background:
+    radial-gradient(200px 130px at var(--mx,50%) var(--my,0%),#ffffff2e,transparent 70%),
+    linear-gradient(180deg,#ffffff21,transparent 26%);
+  opacity:0; transition:opacity .4s ease }
+#ga-ritual:hover .ga-panel::before { opacity:1 }
+#ga-ritual:hover .ga-panel::after { opacity:1 }
+#ga-ritual.ga-closing .ga-panel::after, #ga-ritual:focus-within .ga-panel::after { opacity:.7 }
+#ga-ritual .ga-top { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee0ff26; padding-bottom:12px; gap:12px }
+#ga-ritual .ga-brand, #ga-ritual .ga-eyebrow, #ga-ritual .ga-footer { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted) }
+#ga-ritual button { font:inherit; cursor:pointer }
+#ga-ritual .ga-close { color:var(--muted); background:#ffffff0a; border:1px solid #ffffff25; border-radius:50%; width:34px; height:34px; font-size:22px; line-height:1; flex:none }
+#ga-ritual .ga-close:hover { background:#fff2 }
+#ga-ritual h2 { font-size:clamp(23px,5vw,32px); line-height:1.2; font-weight:500; letter-spacing:-.035em; margin:10px 0 14px }
+#ga-ritual p { color:var(--muted); margin:0 0 18px }
+#ga-ritual .ga-content { padding-top:20px; animation:ga-step .26s ease both }
+#ga-ritual .ga-sigil { height:90px; display:grid; place-items:center; font-size:44px; color:#f3dfff; text-shadow:0 0 30px #d9b0ff; position:relative }
+#ga-ritual .ga-sigil::before { content:""; position:absolute; width:80px; height:80px; border:1px solid #e4c6ff45; border-radius:50%; box-shadow:0 0 35px #ceb2e83b,inset 0 0 30px #eed9ff20 }
+#ga-ritual .ga-center { text-align:center }
+#ga-ritual .ga-progress { display:flex; gap:5px; margin:0 0 15px }
+#ga-ritual .ga-progress i { height:3px; border-radius:3px; background:#ffffff20; flex:1 }
+#ga-ritual .ga-progress i.on { background:#e4c9f5; box-shadow:0 0 10px #e4c9f57a }
+#ga-ritual .ga-options { display:grid; gap:8px; margin:18px 0 }
+#ga-ritual .ga-choice { position:relative; isolation:isolate; overflow:hidden; display:flex; align-items:center; justify-content:space-between; gap:10px; text-align:left; color:var(--ink); border:1px solid #f4e3ff26; border-radius:12px; background:linear-gradient(120deg,#ffffff0d,#ffffff03); padding:12px 14px; transition:background .2s,border-color .2s,transform .2s,box-shadow .2s }
+#ga-ritual .ga-choice > span { position:relative; z-index:2 }
+#ga-ritual .ga-choice::before { content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0; background:linear-gradient(104deg,#ffd9ea 0%,#e9aecb 16%,#fff2f8 31%,#d99ab8 47%,#ffe6f1 62%,#e7aec9 79%,#ffdced 100%); background-size:230% 100%; background-position:0 0; transition:opacity .28s ease,background-position .85s ease }
+#ga-ritual .ga-choice::after { content:""; position:absolute; z-index:1; inset:-40% auto -40% -40%; width:26%; pointer-events:none; opacity:0; background:linear-gradient(90deg,transparent,#fff9,transparent); transform:translateX(-120%) rotate(14deg) }
+#ga-ritual .ga-choice:hover { background:#f5dfff14; border-color:#f2bcd9a6; transform:translateY(-1px); box-shadow:0 3px 18px #08061033,0 0 20px #f0a7cc26 }
+#ga-ritual .ga-choice:hover::before { opacity:.24; background-position:100% 0 }
+#ga-ritual .ga-choice:hover::after { opacity:.85; animation:ga-choice-sheen .72s ease both }
+#ga-ritual .ga-choice:hover .ga-mark { color:#ffd3e7; text-shadow:0 0 12px #f7a9c9a8 }
+#ga-ritual .ga-choice[aria-pressed=true] { border-color:#e4c9f5; background:#d7b9f026; box-shadow:inset 0 0 20px #e2c5ff0b }
+#ga-ritual .ga-choice .ga-mark { font-size:17px; color:#e9d2f9; min-width:18px; text-align:center }
+#ga-ritual .ga-swatch { display:inline-flex; gap:2px; margin-right:8px; vertical-align:middle }
+#ga-ritual .ga-swatch i { width:12px; height:12px; border-radius:50%; border:1px solid #ffffff35 }
+#ga-ritual .ga-actions { display:flex; gap:9px; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-top:20px }
+#ga-ritual .ga-primary, #ga-ritual .ga-secondary { border-radius:10px; padding:10px 17px; min-height:44px; position:relative; overflow:hidden; transition:box-shadow .2s,background .2s }
+#ga-ritual .ga-primary { background:linear-gradient(110deg,#e7d4f0,#c6b6e6); color:#211629; border:1px solid #fff8; font-weight:600 }
+#ga-ritual .ga-primary:hover:not(:disabled) { box-shadow:0 0 25px #d7b9f050 }
+#ga-ritual .ga-primary:hover:not(:disabled)::after { content:""; position:absolute; inset:-40% auto -40% 0; width:35%; background:#fff5; pointer-events:none; animation:ga-shine .65s ease both }
+#ga-ritual .ga-primary:disabled { opacity:.4; cursor:not-allowed }
+#ga-ritual .ga-secondary { background:#ffffff08; border:1px solid #ffffff30; color:var(--ink) }
+#ga-ritual .ga-secondary:hover { background:#ffffff16 }
+#ga-ritual :is(button,input,textarea):focus-visible { outline:2px solid #f3d6ff; outline-offset:3px }
+#ga-ritual h2:focus { outline:none }
+#ga-ritual label { display:block; margin:14px 0 6px; font-size:13px; color:var(--muted) }
+#ga-ritual textarea, #ga-ritual input { width:100%; background:#130e214a; color:var(--ink); font:inherit; border:1px solid #e9d6ff33; border-radius:12px; padding:13px; transition:background .2s,border-color .2s }
+#ga-ritual textarea:hover, #ga-ritual input:hover, #ga-ritual textarea:focus, #ga-ritual input:focus { background:#ffffff0c; border-color:#dfc5f98c }
+#ga-ritual textarea { resize:vertical; min-height:104px }
+#ga-ritual ::placeholder { color:#b6a5c3 }
+#ga-ritual .ga-small { font-size:12px; color:var(--muted) }
+#ga-ritual .ga-gift-note { margin:12px 0 0; padding:9px 12px; border:1px dashed #e4c9f54d; border-radius:10px; font-size:12.5px; color:#ecdcf7; background:#e9d3ff0f; animation:ga-step .3s ease both }
+#ga-ritual .ga-summary { background:#120f2038; border:1px solid #ffffff20; border-radius:12px; padding:12px; margin:15px 0; overflow-wrap:anywhere }
+#ga-ritual .ga-summary div { display:grid; grid-template-columns:95px 1fr; gap:12px; padding:6px 0; border-bottom:1px solid #ffffff10 }
+#ga-ritual .ga-summary div:last-child { border:0 }
+#ga-ritual .ga-summary dt { color:var(--muted); font-size:12px }
+#ga-ritual .ga-summary dd { margin:0; font-size:13px }
+#ga-ritual .ga-footer { margin-top:23px; border-top:1px solid #ffffff20; padding-top:12px; text-align:center }
+#ga-ritual .ga-status { min-height:20px; margin:9px 0 0; color:#e1d1ef; font-size:12px }
+@media(prefers-reduced-motion:reduce) { #ga-ritual, #ga-ritual *, #ga-ritual::backdrop { animation:none!important; transition:none!important } #ga-ritual .ga-choice:hover::after { display:none } #ga-ritual .ga-choice:hover::before { opacity:.24 } }
+@media(max-width:420px) { #ga-ritual .ga-panel{padding:18px} #ga-ritual .ga-actions button{flex-grow:1} #ga-ritual .ga-summary div{grid-template-columns:1fr;gap:1px} }
 .noscript { padding: 18px 0; }
 
 @media (min-width: 1800px) { .main { margin-right: auto; } }
