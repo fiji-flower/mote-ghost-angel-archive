@@ -21,22 +21,33 @@ and deploys a single Worker that publishes this repository as the site *and*
 runs this handler on the same address, so `/ritual` and `/public` live beside
 `index.html`.
 
-That file holds the database binding (`DB`), the `SHOP_ITEM_CODE` variable, and
-the Worker name. Two secrets are set in the dashboard instead, because they must
-never be in the repository:
+`worker/src/entry.js` is the entry point. It passes each request to
+`worker/src/index.js`, which is the actual server.
 
-- `ADMIN_KEY` — any long phrase of your own; the admin page is `/admin?key=…`.
-- `KOFI_TOKEN` — the verification token Ko-fi shows for the webhook.
+## The two keys
 
-Worker → Settings → Variables and Secrets → add each as type **secret**, on the
-Worker named `mote-ghost-angel-archive` (not a second one with a similar name).
+`ADMIN_KEY` guards `/admin`, and `KOFI_TOKEN` is what proves a webhook really
+came from Ko-fi. Neither belongs in the repository. They can be set either way:
+
+**In the database** (works from the D1 console, no deploy needed):
+
+```sql
+INSERT INTO settings (k, v) VALUES ('admin_key', 'a phrase of your own');
+INSERT INTO settings (k, v) VALUES ('kofi_token', 'the token Ko-fi shows');
+```
+
+`entry.js` creates the `settings` table itself and reads only those two names.
+A changed value is picked up within a minute.
+
+**In the environment** (Worker → Settings → Variables and Secrets, type secret),
+which takes precedence when both exist.
 
 ## The Ko-fi webhook
 
 On Ko-fi: Settings → Webhooks → add `https://<your-worker>/kofi` with type
-**Shop Order**, then copy the verification token it generates and save it in
-Cloudflare as `KOFI_TOKEN`. Until that token matches, `/kofi` answers `401` and
-Ko-fi reports failed deliveries; after it, orders arrive and are matched.
+**Shop Order**, then copy the verification token it generates and store it as
+`kofi_token`. Until that token matches, `/kofi` answers `401` and Ko-fi reports
+failed deliveries; after it, orders arrive and are matched.
 
 Matching prefers the code the buyer was given, then an exact name, then the
 nearest unmatched ritual from the last 24 hours — that last one is recorded as
