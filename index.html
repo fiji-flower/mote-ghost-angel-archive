@@ -74,3 +74,74 @@
       </div>
       <span class="hero-corner" aria-hidden="true"></span>
     </section>
+    <section class="collection" id="collection" aria-labelledby="collection-title">
+      <div class="section-head">
+        <div class="collection-heading"><div class="overline"><span class="horizontal-line"></span> Ghost-family concept studies</div><h2 id="collection-title">The collection</h2></div>
+        <div class="filters" id="filters" role="group" aria-label="Filter archive entries"></div>
+      </div>
+      <p id="filter-status" class="sr-only" aria-live="polite"></p>
+      <div id="gallery" class="gallery"></div>
+      <noscript><p class="noscript">Enable JavaScript to explore each character and prepare a brief for your ghost.</p></noscript>
+      <div class="gallery-end"><span id="gallery-count"></span><span class="end-line"></span><button id="load-more" type="button" class="text-button" hidden>Load more entries</button></div>
+    </section>
+    <section id="commissions" class="offer glass" aria-labelledby="offer-title">
+      <div class="offer-top">
+        <div><div class="overline"><svg class="icon"><use href="#i-pencil"/></svg> Made to order</div><h2 id="offer-title">The Binding Contract</h2><p class="offer-intro"><em>Some spirits find us. Others are waiting to be found.</em></p></div>
+        <div class="offer-price"><strong class="price-text">$55</strong><span>USD / order</span></div>
+      </div>
+      <div class="scope-grid">
+        <div class="scope"><h3>Your ghost arrives with</h3><ul>
+          <li>An original, handmade Ghost Angel, approximately 4–5 inches tall.</li>
+          <li>Its own unique name, personality and story.</li>
+          <li>A printed, individually numbered collectible trading card, approximately 2.5 × 3.5 inches, featuring original artwork illustrated by <span data-artist>Petal Lucent</span> without the use of AI.</li>
+          <li>A personal question from your spirit, inviting curiosity and reflection.</li>
+          <li>A link to a curated playlist inspired by your spirit’s personality and imaginary world.</li>
+          <li>A little mystery for you to discover together.</li>
+        </ul></div>
+        <div class="scope"><h3>Made especially for you</h3>
+          <p>Every Ghost Angel is handmade: a little spirit with a personality, a history, and a peculiar way of experiencing the world.</p>
+          <p>Born from the imagination of <span data-artist>Petal Lucent</span>, each ghost carries its own combination of colors, textures, symbols and small sentimental details.</p>
+          <p>No two spirits are quite alike. Clip them onto your favorite bag, bring them on your adventures, introduce them to your other little treasures, or give them somewhere peaceful to call home.</p>
+          <p><em>Every ghost belongs to a growing family.</em></p>
+        </div>
+      </div>
+      <div class="time-cap"><svg class="icon"><use href="#i-sparkle"/></svg><span>Each Ghost Angel is handcrafted to order. Please allow approximately <strong>2–3 weeks</strong> for your spirit to take shape before it begins its journey to you. Shipping within the United States is calculated separately at checkout, and delivery time is additional to crafting time. Small variations in appearance are a natural part of being handmade — and part of what makes your little companion uniquely yours.</span></div>
+      <div class="release-row">
+        <div><h3 class="slot-title" id="slots-title">Three spirits in this release</h3><div id="slots" class="slots"></div></div>
+        <button type="button" id="brief-open" class="btn btn-opal"><svg class="icon"><use href="#i-pencil"/></svg><span>Name your ghost</span></button>
+      </div>
+      <p class="booking-note" id="booking-note">Ordering opens soon. You can name your ghost and save the details now.</p>
+    </section>
+    <footer class="page-foot"><span>NACREVOID &nbsp;/&nbsp; <span data-artist>Petal Lucent</span></span><a href="#top">Back to top</a></footer>
+  </main>
+
+  <dialog id="entry-dialog" class="modal entry-modal" aria-labelledby="entry-name">
+    <div class="entry-layout">
+      <div class="entry-image"><img id="entry-image" alt=""></div>
+      <div class="entry-copy">
+        <button type="button" class="close-modal icon-btn" aria-label="Close character"><svg class="icon"><use href="#i-close"/></svg></button>
+        <div class="overline" id="entry-id"></div><h2 id="entry-name"></h2><p class="entry-story" id="entry-story"></p>
+        <dl class="entry-facts"><div><dt>Palette</dt><dd id="entry-palette"></dd></div><div><dt>Signature detail</dt><dd id="entry-detail"></dd></div></dl>
+        <p id="entry-credit" class="entry-credit"></p>
+        <div class="entry-pager"><button type="button" class="text-button" id="prev-entry">Previous</button><span id="entry-position"></span><button type="button" class="text-button" id="next-entry">Next</button></div>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="brief-dialog" class="modal brief-modal" aria-labelledby="brief-title">
+    <div class="brief-inner">
+      <button type="button" class="close-modal icon-btn" aria-label="Close order brief"><svg class="icon"><use href="#i-close"/></svg></button>
+      <div class="overline">The Binding Contract <span class="slash">/</span> <span class="price-text">$55</span></div>
+      <h2 id="brief-title">Your ghost brief</h2>
+      <p class="brief-intro" id="brief-intro">Name your ghost, choose a palette, and give it one personal motif. Keep a copy for when ordering opens.</p>
+      <form id="brief-form">
+        <label>Ghost name <span>(optional)</span><input id="ghost-name" name="ghostName" maxlength="64" placeholder="Name your little ghost" autocomplete="off"></label>
+        <label>Color palette<input id="ghost-palette" name="palette" maxlength="120" placeholder="e.g. Opal pink and bruised violet" required></label>
+        <label>One personal motif<textarea id="ghost-motif" name="motif" maxlength="260" rows="2" placeholder="e.g. A halo made from my first guitar string" required></textarea></label>
+        <div class="brief-actions"><button class="btn btn-opal" type="submit" id="copy-brief"><svg class="icon"><use href="#i-copy"/></svg>Copy brief</button><button class="btn btn-outline" type="button" id="save-brief">Download .txt</button><a id="contact-link" class="btn btn-opal" hidden>Contact the artist</a></div>
+        <p id="brief-result" class="form-result" role="status"></p>
+      </form>
+      <p class="brief-foot" id="brief-foot">A saved brief stays with you. Petal Lucent confirms each order directly.</p>
+    </div>
+  </dialog>
+</body>
+</html>
