@@ -1,0 +1,28 @@
+/* Kept apart from styles.css so the main sheet stays exactly as it was.
+   Covers the optional share control at the end of the ritual and the wall of spirits below it. */
+
+#ga-ritual .ga-share { display:flex; align-items:center; gap:10px; margin:16px 0 0; padding:11px 13px; border:1px solid #f4e3ff26; border-radius:12px; background:#ffffff08; font-size:13.5px; color:var(--ink); cursor:pointer }
+#ga-ritual .ga-share:hover { border-color:#e4c9f55c; background:#ffffff0f }
+#ga-ritual .ga-share input { width:17px; height:17px; margin:0; flex:none; accent-color:#d9bdf0; cursor:pointer }
+#ga-ritual .ga-share-note { margin:6px 0 0 }
+#ga-ritual .ga-code { display:block; margin-top:5px; color:#f3e2ff }
+#ga-ritual .ga-code b { font-family:var(--mono); letter-spacing:.12em; color:#fff }
+
+/* Wall of spirits: the transmissions people chose to share. Hidden until there are some. */
+.ghost-wall { padding-top: clamp(30px,2.6vw,50px); }
+.ghost-wall-count { font-family: var(--mono); font-size: .71rem; letter-spacing: .045em; color: var(--dust); padding-bottom: 3px; }
+.ghost-wall-intro { margin: 12px 0 18px; max-width: 65ch; color: var(--muted); }
+.ghost-wall-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: clamp(10px,1.1vw,16px); }
+.ghost-card { isolation: isolate; padding: 15px 15px 12px; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(158deg,rgba(92,74,104,.32),rgba(44,36,54,.6)); backdrop-filter: blur(11px); box-shadow: 0 3px 12px rgba(0,0,0,.12); }
+.ghost-card-swatches { display: flex; gap: 4px; margin-bottom: 12px; }
+.ghost-card-swatches i { width: 15px; height: 15px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); box-shadow: 0 0 11px rgba(226,190,246,.2); }
+.ghost-card-resonance { color: #f8f0fc; font: 600 1.02rem/1.25 var(--body); letter-spacing: -.022em; }
+.ghost-card-facts { margin: 11px 0 12px; display: grid; gap: 6px; }
+.ghost-card-facts div { display: grid; grid-template-columns: 66px 1fr; gap: 8px; align-items: baseline; }
+.ghost-card-facts dt { font-family: var(--mono); font-size: .6rem; letter-spacing: .07em; text-transform: uppercase; color: #a294ae; }
+.ghost-card-facts dd { margin: 0; font-size: .84rem; line-height: 1.4; color: #dbcee4; }
+.ghost-card-date { font-family: var(--mono); font-size: .62rem; letter-spacing: .07em; text-transform: uppercase; color: #9b8da7; }
+.ghost-wall-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 17px; color: var(--muted); font-size: .9rem; }
+.ghost-wall-foot .text-button { color: #eed6ff; }
+@media (max-width: 1120px) { .ghost-wall-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 540px) { .ghost-wall-grid { grid-template-columns: 1fr; } .ghost-card-facts div { grid-template-columns: 80px 1fr; } }

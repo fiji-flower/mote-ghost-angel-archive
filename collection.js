@@ -10,7 +10,11 @@ window.MOTE_ARCHIVE = {
     slots: ["available", "available", "available"],
     // Set either a full https:// booking link or a public artist email to open orders.
     bookingUrl: "https://ko-fi.com/s/2df1ab1b45",
-    artistEmail: ""
+    artistEmail: "",
+    // The Cloudflare Worker that keeps a copy of each transmission. Leave empty to turn saving off.
+    ritualApi: "",
+    // How many shared transmissions the wall shows at most.
+    wallLimit: 9
   },
   entries: [
     {
