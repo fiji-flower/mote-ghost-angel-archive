@@ -33,3 +33,15 @@ line stay hidden, and the wall of spirits stays invisible.
 
 `wrangler.toml` also holds `SHOP_ITEM_CODE`, the code at the end of the Ko-fi
 shop link. Orders for other items are stored but never matched.
+
+## Already on Cloudflare Pages?
+
+`functions/[[path]].js` imports this same handler, so a Pages project serves the
+same routes and no Worker is needed. Bindings live in the Pages project instead
+of `wrangler.toml`:
+
+- Settings → Variables and Secrets → add `ADMIN_KEY` and `KOFI_TOKEN`.
+- Settings → Bindings (or Functions → D1 database bindings) → add a D1 binding
+  named `DB` pointing at the database.
+- The project's `*.pages.dev` address is the one that goes into `ritualApi` and
+  into Ko-fi's webhook field.
