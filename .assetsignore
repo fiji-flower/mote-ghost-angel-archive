@@ -1,0 +1,11 @@
+# Files that must never be published as part of the site.
+# Everything not listed here stays public.
+worker/
+functions/
+README.md
+wrangler.toml
+wrangler.jsonc
+.assetsignore
+.git/
+.github/
+write-probe.txt
