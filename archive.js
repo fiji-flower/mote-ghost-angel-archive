@@ -8,8 +8,6 @@
   const numberWords = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
   const word = (n) => numberWords[n] || String(n);
   const openSlots = offer.slots.filter((status) => status === "available").length;
-  const pixelSize = (dimensions) => dimensions.map((n) => n.toLocaleString("en-US")).join(" × ");
-  const displayHours = word(offer.maxIllustrationHours) + (offer.maxIllustrationHours === 1 ? " hour" : " hours");
   const icon = (name) => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("class", "icon");
@@ -28,12 +26,9 @@
   for (const node of document.querySelectorAll("[data-artist]")) node.textContent = artist;
   for (const node of document.querySelectorAll("[data-series]")) node.textContent = series;
   for (const node of document.querySelectorAll(".price-text")) node.textContent = price;
-  $("time-limit").textContent = displayHours + " per order";
-  $("portrait-size").textContent = pixelSize(offer.portraitPixels);
-  $("card-size").textContent = pixelSize(offer.cardPixels);
   const qty = offer.slots.length;
-  const slotWord = qty === 1 ? "slot" : "slots";
-  $("slots-title").textContent = word(qty).replace(/^./, (letter) => letter.toUpperCase()) + " commission " + slotWord;
+  const spiritWord = qty === 1 ? "spirit" : "spirits";
+  $("slots-title").textContent = word(qty).replace(/^./, (letter) => letter.toUpperCase()) + " " + spiritWord + " in this release";
 
   function configuredContact() {
     if (offer.bookingUrl) {
@@ -49,19 +44,19 @@
   }
   const contact = configuredContact();
   const canInquire = openSlots > 0 && contact;
-  $("header-slots").textContent = openSlots ? (contact ? openSlots + " " + (openSlots === 1 ? "slot open" : "slots open") : "First drop · " + qty + " " + slotWord) : "Drop fully claimed";
+  $("header-slots").textContent = openSlots ? (contact ? openSlots + " " + (openSlots === 1 ? "spirit open" : "spirits open") : "First drop · " + qty + " " + spiritWord) : "Drop fully claimed";
   offer.slots.forEach((status, i) => {
     const available = status === "available";
     const label = available ? (contact ? "Open" : "Planned") : "Claimed";
-    const slot = el("span", "slot" + (available ? " available" : ""), "Slot " + String(i + 1).padStart(2, "0") + " · " + label);
+    const slot = el("span", "slot" + (available ? " available" : ""), "Spirit " + String(i + 1).padStart(2, "0") + " · " + label);
     $("slots").append(slot);
   });
   if (canInquire) {
-    $("brief-open").querySelector("span").textContent = "Request a commission";
-    $("booking-note").textContent = artist + " confirms availability and timing before you pay.";
-    $("brief-intro").textContent = "Choose a palette and one personal motif. Save your brief, then send it to " + artist + " to ask about a slot.";
+    $("brief-open").querySelector("span").textContent = "Order your ghost";
+    $("booking-note").textContent = artist + " confirms availability, shipping and timing before you pay.";
+    $("brief-intro").textContent = "Name your ghost, choose a palette and one personal motif. Save the details, then send them to " + artist + " to order.";
   } else if (!openSlots) {
-    $("booking-note").textContent = "Every slot in this release has been claimed. You can save a brief for a future opening.";
+    $("booking-note").textContent = "Every spirit in this release has found a home. You can save your details for a future opening.";
     $("brief-intro").textContent = "This release is full. Save a palette and a personal motif for the next opening.";
   }
 
@@ -227,13 +222,13 @@
   const result = $("brief-result");
   const contactLink = $("contact-link");
   const briefText = () => [
-    "NACREVOID · Ghost Angel illustration request",
+    "NACREVOID · Ghost Angel order",
     "Artist: " + artist, "Series: " + series, "Offer: " + price + " USD",
     "Ghost name: " + ($("ghost-name").value.trim() || "Artist’s choice"),
     "Color palette: " + $("ghost-palette").value.trim(),
     "Personal motif: " + $("ghost-motif").value.trim(),
-    "", "One single-character portrait PNG and a numbered collector-card PNG using the same illustration.",
-    "Personal use. One small sketch-stage change. Illustration limit: " + displayHours + ".",
+    "", "A handmade Ghost Angel, approximately 4–5 inches tall, with its own name, story and a printed, numbered collectible card.",
+    "Made to order: please allow 2–3 weeks plus delivery. Shipping within the United States is calculated at checkout.",
     "Please confirm availability and timing."
   ].join("\n");
   function validateBrief() {
@@ -258,7 +253,7 @@
     contactLink.href = contact.type === "link" ? contact.url : "mailto:" + contact.address;
     contactLink.addEventListener("click", (event) => {
       if (!validateBrief()) { event.preventDefault(); return; }
-      if (contact.type === "email") contactLink.href = "mailto:" + contact.address + "?subject=" + encodeURIComponent("Ghost Angel commission request") + "&body=" + encodeURIComponent(briefText());
+      if (contact.type === "email") contactLink.href = "mailto:" + contact.address + "?subject=" + encodeURIComponent("Ghost Angel order request") + "&body=" + encodeURIComponent(briefText());
     });
   }
   async function copyText(value) {
@@ -268,7 +263,7 @@
     const helper = document.createElement("textarea");
     helper.value = value;
     helper.className = "clipboard-helper";
-    helper.setAttribute("aria-label", "Commission brief to copy");
+    helper.setAttribute("aria-label", "Ghost order brief to copy");
     form.append(helper);
     helper.select();
     let copied = false;
@@ -287,7 +282,7 @@
     const url = URL.createObjectURL(new Blob([briefText() + "\n"], { type: "text/plain;charset=utf-8" }));
     const link = document.createElement("a");
     link.href = url;
-    link.download = "ghost-angel-commission-brief.txt";
+    link.download = "ghost-angel-order-brief.txt";
     form.append(link);
     link.click();
     link.remove();
