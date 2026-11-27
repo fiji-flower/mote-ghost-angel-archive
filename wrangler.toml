@@ -1,0 +1,21 @@
+# Cloudflare Workers Builds deploys from this file.
+#
+# One Worker does both jobs: it publishes the site as static files (as before) and
+# runs the ritual backup at /ritual, /kofi, /public and /admin. The database binding
+# lives here, so the dashboard needs no binding set up by hand.
+
+name = "mote-ghost-angel-archive"
+main = "worker/src/index.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+# Everything in the repository is the website, except what .assetsignore names.
+[assets]
+directory = "."
+binding = "ASSETS"
+
+# The binding name DB is what worker/src/index.js looks for.
+[[d1_databases]]
+binding = "DB"
+database_name = "ghost-angel-archive"
+database_id = "466b6f64-e790-4e64-98a7-262f03717fee"
