@@ -19,3 +19,8 @@ binding = "ASSETS"
 binding = "DB"
 database_name = "ghost-angel-archive"
 database_id = "466b6f64-e790-4e64-98a7-262f03717fee"
+
+[vars]
+# The code at the end of the Ko-fi shop link. Orders for anything else are
+# stored but never matched to a ritual.
+SHOP_ITEM_CODE = "2df1ab1b45"

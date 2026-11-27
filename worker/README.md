@@ -9,39 +9,37 @@ transmission, hands the buyer a short code, and matches Ko-fi orders to rituals.
 | `POST /kofi`       | Ko-fi webhook; matches the order to a ritual               |
 | `GET /public`      | shared rituals for the wall (answers and palette only)     |
 | `GET /admin?key=`  | every ritual and order, behind `ADMIN_KEY`                 |
-| `GET /`            | `Ghost Angel Archive worker is awake.`                     |
+| `DELETE /ritual`   | `?code=AB3D&key=…` removes one ritual and its order match  |
 
 The tables create themselves on the first request, so there is no SQL to run.
 
-## Setup
+## How it is deployed
 
-1. **Create the Worker.** Cloudflare dashboard → Workers & Pages → Create →
-   Worker, connect this repository, and set the root directory to `worker`.
-   (Without GitHub, `npx wrangler deploy` from this folder does the same thing.)
-2. **Create the database.** Workers & Pages → D1 → Create database, name it
-   `ghost-angel-archive`, then copy the ID it shows into `database_id` in
-   `wrangler.toml` and deploy again.
-3. **Two secrets.** On the Worker: Settings → Variables and Secrets →
-   `ADMIN_KEY` (any long random phrase, this is the admin page's key) and
-   `KOFI_TOKEN` (the verification token on Ko-fi's webhooks page).
-4. **The webhook.** Ko-fi → Settings → Webhooks → add
-   `https://<your-worker>/kofi`, type **Shop Order**.
-5. **Tell the site.** Put the Worker's URL into `ritualApi` in `collection.js`.
+The root `wrangler.toml` is the only config. Cloudflare Workers Builds reads it
+and deploys a single Worker that publishes this repository as the site *and*
+runs this handler on the same address, so `/ritual` and `/public` live beside
+`index.html`.
 
-Until step 5 the site never calls any of this: the share checkbox and the code
-line stay hidden, and the wall of spirits stays invisible.
+That file holds the database binding (`DB`, named after nothing but itself), the
+`SHOP_ITEM_CODE` variable, and the Worker name. Two secrets are set in the
+dashboard instead, because they must never be in the repository:
 
-`wrangler.toml` also holds `SHOP_ITEM_CODE`, the code at the end of the Ko-fi
-shop link. Orders for other items are stored but never matched.
+- `ADMIN_KEY` — any long phrase of your own; the admin page is `/admin?key=…`.
+- `KOFI_TOKEN` — the verification token Ko-fi shows for the webhook.
 
-## Already on Cloudflare Pages?
+Worker → Settings → Variables and Secrets → add each as type **secret**, on the
+Worker named `mote-ghost-angel-archive` (not a second one with a similar name).
 
-`functions/[[path]].js` imports this same handler, so a Pages project serves the
-same routes and no Worker is needed. Bindings live in the Pages project instead
-of `wrangler.toml`:
+## The Ko-fi webhook
 
-- Settings → Variables and Secrets → add `ADMIN_KEY` and `KOFI_TOKEN`.
-- Settings → Bindings (or Functions → D1 database bindings) → add a D1 binding
-  named `DB` pointing at the database.
-- The project's `*.pages.dev` address is the one that goes into `ritualApi` and
-  into Ko-fi's webhook field.
+On Ko-fi: Settings → Webhooks → add `https://<your-worker>/kofi` with type
+**Shop Order**, then copy the verification token it generates and save it in
+Cloudflare as `KOFI_TOKEN`. Until that token matches, `/kofi` answers `401` and
+Ko-fi reports failed deliveries; after it, orders arrive and are matched.
+
+Matching prefers the code the buyer was given, then an exact name, then the
+nearest unmatched ritual from the last 24 hours — that last one is recorded as
+`match_kind: time` because it is a guess.
+
+`functions/[[path]].js` exists only for the case of hosting this on Cloudflare
+Pages instead; it imports the same handler.
