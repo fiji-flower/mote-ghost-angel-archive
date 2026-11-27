@@ -6,7 +6,8 @@
      GET  /public   rituals people chose to share, for the site's wall
      GET  /admin    every ritual and order, behind ?key=
 
-   Secrets (wrangler secret put): KOFI_TOKEN, ADMIN_KEY
+   The two keys, ADMIN_KEY and KOFI_TOKEN, may be set as Worker secrets or stored in
+   the database's settings table (see withStoredKeys). The environment wins.
    Variables (wrangler.toml): SHOP_ITEM_CODE */
 
 const CODE_ALPHABET = "ACDEFGHJKLMNPQRTUVWXY34679";
@@ -32,7 +33,8 @@ const SCHEMA = [
     "amount TEXT NOT NULL DEFAULT '', currency TEXT NOT NULL DEFAULT '', from_name TEXT NOT NULL DEFAULT '', " +
     "email TEXT NOT NULL DEFAULT '', message TEXT NOT NULL DEFAULT '', item_code TEXT NOT NULL DEFAULT '', " +
     "ritual_id TEXT, match_kind TEXT)",
-  "CREATE INDEX IF NOT EXISTS orders_created ON orders (created_at DESC)"
+  "CREATE INDEX IF NOT EXISTS orders_created ON orders (created_at DESC)",
+  "CREATE TABLE IF NOT EXISTS settings (k TEXT PRIMARY KEY, v TEXT NOT NULL)"
 ];
 
 const CORS = {
@@ -85,6 +87,43 @@ function ensureSchema(env) {
     });
   }
   return schemaReady;
+}
+
+/* The two keys may live in the database instead of the dashboard, whose Variables and
+   Secrets panel does not always reach a Worker built from Git. The D1 console can
+   always write them:
+
+     INSERT INTO settings (k, v) VALUES ('admin_key', 'a phrase of your own');
+
+   A value in the environment wins, so setting a real secret later needs no change. */
+const SETTING_NAMES = { admin_key: "ADMIN_KEY", kofi_token: "KOFI_TOKEN" };
+const SETTINGS_TTL = 60 * 1000;
+let settingsCache = { at: 0, values: {} };
+
+async function withStoredKeys(env) {
+  if (!env.DB) return env;
+  if (Date.now() - settingsCache.at >= SETTINGS_TTL) {
+    try {
+      await env.DB.prepare("CREATE TABLE IF NOT EXISTS settings (k TEXT PRIMARY KEY, v TEXT NOT NULL)").run();
+      const { results } = await env.DB.prepare("SELECT k, v FROM settings").all();
+      const values = {};
+      for (const row of results || []) {
+        const name = SETTING_NAMES[String(row.k || "").trim().toLowerCase()];
+        if (name && row.v) values[name] = String(row.v);
+      }
+      settingsCache = { at: Date.now(), values };
+    } catch {
+      // No table yet: carry on with the environment alone.
+    }
+  }
+  const values = settingsCache.values;
+  if (!values.ADMIN_KEY && !values.KOFI_TOKEN) return env;
+  return new Proxy(env, {
+    get(target, prop) {
+      if (typeof prop === "string" && values[prop] && !target[prop]) return values[prop];
+      return target[prop];
+    }
+  });
 }
 
 function makeCode() {
@@ -392,6 +431,7 @@ async function handleAdmin(url, env) {
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+    env = await withStoredKeys(env);
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, "") || "/";
     try {

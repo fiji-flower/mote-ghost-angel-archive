@@ -10,7 +10,7 @@ transmission, hands the buyer a short code, and matches Ko-fi orders to rituals.
 | `GET /public`      | shared rituals for the wall (answers and palette only)     |
 | `GET /admin?key=`  | every ritual and order, behind `ADMIN_KEY`                 |
 
-The tables create themselves on the first request, so there is no SQL to run.
+Every table creates itself on the first request, so there is no SQL to run.
 Removing a ritual means deleting its row in the D1 console, for example
 `DELETE FROM rituals WHERE code = 'AB3D';`
 
@@ -18,11 +18,8 @@ Removing a ritual means deleting its row in the D1 console, for example
 
 The root `wrangler.toml` is the only config. Cloudflare Workers Builds reads it
 and deploys a single Worker that publishes this repository as the site *and*
-runs this handler on the same address, so `/ritual` and `/public` live beside
-`index.html`.
-
-`worker/src/entry.js` is the entry point. It passes each request to
-`worker/src/index.js`, which is the actual server.
+runs `worker/src/index.js` on the same address, so `/ritual` and `/public` live
+beside `index.html`.
 
 ## The two keys
 
@@ -36,8 +33,8 @@ INSERT INTO settings (k, v) VALUES ('admin_key', 'a phrase of your own');
 INSERT INTO settings (k, v) VALUES ('kofi_token', 'the token Ko-fi shows');
 ```
 
-`entry.js` creates the `settings` table itself and reads only those two names.
-A changed value is picked up within a minute.
+The `settings` table is created with the other tables. A changed value is picked
+up within a minute.
 
 **In the environment** (Worker → Settings → Variables and Secrets, type secret),
 which takes precedence when both exist.
