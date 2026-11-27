@@ -9,9 +9,10 @@ transmission, hands the buyer a short code, and matches Ko-fi orders to rituals.
 | `POST /kofi`       | Ko-fi webhook; matches the order to a ritual               |
 | `GET /public`      | shared rituals for the wall (answers and palette only)     |
 | `GET /admin?key=`  | every ritual and order, behind `ADMIN_KEY`                 |
-| `DELETE /ritual`   | `?code=AB3D&key=…` removes one ritual and its order match  |
 
 The tables create themselves on the first request, so there is no SQL to run.
+Removing a ritual means deleting its row in the D1 console, for example
+`DELETE FROM rituals WHERE code = 'AB3D';`
 
 ## How it is deployed
 
@@ -20,9 +21,9 @@ and deploys a single Worker that publishes this repository as the site *and*
 runs this handler on the same address, so `/ritual` and `/public` live beside
 `index.html`.
 
-That file holds the database binding (`DB`, named after nothing but itself), the
-`SHOP_ITEM_CODE` variable, and the Worker name. Two secrets are set in the
-dashboard instead, because they must never be in the repository:
+That file holds the database binding (`DB`), the `SHOP_ITEM_CODE` variable, and
+the Worker name. Two secrets are set in the dashboard instead, because they must
+never be in the repository:
 
 - `ADMIN_KEY` — any long phrase of your own; the admin page is `/admin?key=…`.
 - `KOFI_TOKEN` — the verification token Ko-fi shows for the webhook.
