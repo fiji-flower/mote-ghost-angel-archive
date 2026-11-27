@@ -5,12 +5,10 @@ window.MOTE_ARCHIVE = {
   artist: "Petal Lucent",
   offer: {
     priceUSD: 55,
-    maxIllustrationHours: 2,
-    portraitPixels: [2400, 3000],
-    cardPixels: [1500, 2100],
-    // Use "available" or "claimed". Update this only after confirming an order.
+    // One entry per ghost in this release. Use "available" or "claimed".
+    // Update this only after confirming an order.
     slots: ["available", "available", "available"],
-    // Set either a full https:// booking link or a public artist email to open inquiries.
+    // Set either a full https:// booking link or a public artist email to open orders.
     bookingUrl: "",
     artistEmail: ""
   },
