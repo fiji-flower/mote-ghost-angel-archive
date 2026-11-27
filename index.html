@@ -9,9 +9,11 @@
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="./assets/family.webp" fetchpriority="high">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./spirits.css">
   <script src="./collection.js" defer></script>
   <script src="./archive.js" defer></script>
   <script src="./ritual.js" defer></script>
+  <script src="./ghosts.js" defer></script>
   <script src="./mote-viewer.js" defer></script>
 </head>
 <body id="top">
@@ -113,6 +115,15 @@
         <button type="button" id="brief-open" class="btn btn-opal"><svg class="icon"><use href="#i-pencil"/></svg><span>Name your ghost</span></button>
       </div>
       <p class="booking-note" id="booking-note">Ordering opens soon. You can name your ghost and save the details now.</p>
+    </section>
+    <section id="ghosts" class="ghost-wall" aria-labelledby="ghost-wall-title" hidden>
+      <div class="section-head">
+        <div class="collection-heading"><div class="overline"><span class="horizontal-line"></span> Rituals received</div><h2 id="ghost-wall-title">Spirits already named</h2></div>
+        <span class="ghost-wall-count" id="ghost-wall-count"></span>
+      </div>
+      <p class="ghost-wall-intro">Some people let their answers be seen. Here is the feeling they asked for, the world they wanted their ghost to live in, and the relic it would keep.</p>
+      <div id="ghost-wall-grid" class="ghost-wall-grid"></div>
+      <p class="ghost-wall-foot">Yours is still out there. <button type="button" class="text-button" data-open-ritual>Name your ghost →</button></p>
     </section>
     <footer class="page-foot"><span>NACREVOID &nbsp;/&nbsp; <span data-artist>Petal Lucent</span></span><a href="#top">Back to top</a></footer>
   </main>
