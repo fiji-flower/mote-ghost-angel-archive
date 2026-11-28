@@ -56,15 +56,6 @@
   const total = () => flow().length - 1;
   const questionAt = (key) => questions.find((q) => q.id === key);
   const progress = () => `<div class="ga-progress" role="progressbar" aria-label="Ritual progress" aria-valuemin="0" aria-valuemax="${total()}" aria-valuenow="${step + 1}">${Array.from({ length: total() }, (_, i) => `<i class="${i <= step ? "on" : ""}"></i>`).join("")}</div>`;
-  const transmission = () => {
-    const lines = ["GHOST ANGEL ARCHIVE — SPIRIT TRANSMISSION", "", ...questions.map((q, i) => q.label + ": " + (answers[i] ?? "Unspecified"))];
-    if (isGift()) {
-      lines.push("", "A gift, still secret. For: " + (giftFrom.trim() || "Unspecified"));
-      if (giftAbout.trim()) lines.push("About them: " + giftAbout.trim());
-    }
-    lines.push("", "Final whisper: " + (whisper || "None"), "Colors or materials to avoid: " + (avoid || "None"));
-    return lines.join("\n");
-  };
   const codeLine = (code) => `Your code: <b>${esc(code)}</b>. If your message doesn’t reach me, this is how I’ll find your ritual.`;
   const shareChoice = () => `<label class="ga-share"><input type="checkbox" id="ga-share"${sharePublic ? " checked" : ""}><span>Share my answers on the wall of spirits</span></label><p class="ga-small ga-share-note">Your five answers, and nothing else. Leave this unticked and nothing is shared at all — staying private is the default.</p><p class="ga-small ga-share-note">We never publish anything from Ko-fi: the wall shows only the five ritual answers, never the buyer’s name, email, message or amount.${isGift() ? " This is a gift, so who it is for and what you told me about them stay private as well — they never appear on the wall." : ""}</p>`;
   // A quiet copy for the artist. Every failure here is silent: the ritual already
@@ -111,7 +102,7 @@
       content.innerHTML = `${progress()}<div class="ga-eyebrow">0${step + 1} / 0${total()} — ${q.label}</div>${heading(q.q)}<div class="ga-options" role="group" aria-label="${esc(q.q)}">${q.options.map((o, i) => `<button type="button" class="ga-choice" data-ga-choice="${i}" aria-pressed="${picked === o}"><span>${q.id === "chroma" ? `<span class="ga-swatch" aria-hidden="true">${palettes[i].map((c) => `<i style="background:${c}"></i>`).join("")}</span>` : ""}${esc(o)}</span><span class="ga-mark" aria-hidden="true">${picked === o ? "✧" : "○"}</span></button>`).join("")}</div>${q.id === "habitat" && isGift() ? `<p class="ga-gift-note" role="status">A gift — lovely. There’ll be one optional question about them, near the end.</p>` : ""}<div class="ga-actions">${btn("back", "Back")}${btn("next", "Continue →", "primary", picked === null ? "disabled" : "")}</div>`;
     } else if (key === "recipient") content.innerHTML = `${progress()}<div class="ga-eyebrow">Optional / the recipient</div>${heading("Who is this little spirit for?")}<p>Leave it blank if you would rather keep the surprise. Only you will see this.</p><label for="ga-gift-from">Their name or nickname</label><input id="ga-gift-from" maxlength="120" value="${esc(giftFrom)}" placeholder="Optional"><label for="ga-gift-about">A little about them</label><textarea id="ga-gift-about" maxlength="600" placeholder="What they love, what makes them smile, a private joke…">${esc(giftAbout)}</textarea><div class="ga-actions">${btn("back", "Back")}${btn("next", "Continue →", "primary")}</div>`;
     else if (key === "whisper") content.innerHTML = `${progress()}<div class="ga-eyebrow">Optional / final whisper</div>${heading("Is there anything else the spirit should know?")}<p>A favorite symbol, a little obsession, or something that makes you smile.</p><label for="ga-whisper">A fragment of your universe</label><textarea id="ga-whisper" maxlength="1000" placeholder="Leave a little whisper...">${esc(whisper)}</textarea><label for="ga-avoid">Colors or materials to avoid</label><input id="ga-avoid" maxlength="300" value="${esc(avoid)}" placeholder="Optional"><p class="ga-small" style="margin-top:12px">Share only what you feel comfortable sharing. Your answers inspire the design; they are not exact customization instructions.</p><div class="ga-actions">${btn("back", "Back")}${btn("next", "Complete transmission", "primary")}</div>`;
-    else content.innerHTML = `<div class="ga-center"><div class="ga-sigil" aria-hidden="true">✧</div><div class="ga-eyebrow">Transmission complete${isGift() ? " / a gift, still secret" : ""}</div>${heading(isGift() ? "A little spirit is on its way." : "A little spirit awaits.")}<p>${isGift() ? "Somewhere, someone has no idea that a little spirit is about to enter their life." : "Its name, face and story remain a beautiful mystery."}</p>${isGift() ? '<p class="ga-small">Its name, face and story remain a beautiful mystery.</p>' : ""}</div><dl class="ga-summary">${questions.map((qq, i) => `<div><dt>${qq.label}</dt><dd>${esc(answers[i] || "")}</dd></div>`).join("")}${isGift() ? `<div><dt>Gift for</dt><dd>${esc(giftFrom.trim() || "Just a surprise")}</dd></div>${giftAbout.trim() ? `<div><dt>About them</dt><dd>${esc(giftAbout)}</dd></div>` : ""}` : ""}${whisper ? `<div><dt>Whisper</dt><dd>${esc(whisper)}</dd></div>` : ""}${avoid ? `<div><dt>Avoid</dt><dd>${esc(avoid)}</dd></div>` : ""}</dl>${ritualApi ? shareChoice() : ""}<div class="ga-actions">${bookingUrl ? btn("kofi", "Continue to Ko-fi →", "primary", 'style="flex:1 1 100%"') : ""}${btn("copy", "Copy transmission")}${btn("download", "Download .txt")}</div><p class="ga-status" role="status">${savedCode ? codeLine(savedCode) : ""}</p><p class="ga-small">${bookingUrl ? "Your answers are already saved here, so there is nothing to paste when you order." : "Keep a copy for when ordering opens."}</p>${btn("edit", "Revisit my answers", "secondary", 'style="width:100%"')}`;
+    else content.innerHTML = `<div class="ga-center"><div class="ga-sigil" aria-hidden="true">✧</div><div class="ga-eyebrow">Transmission complete${isGift() ? " / a gift, still secret" : ""}</div>${heading(isGift() ? "A little spirit is on its way." : "A little spirit awaits.")}<p>${isGift() ? "Somewhere, someone has no idea that a little spirit is about to enter their life." : "Its name, face and story remain a beautiful mystery."}</p>${isGift() ? '<p class="ga-small">Its name, face and story remain a beautiful mystery.</p>' : ""}</div><dl class="ga-summary">${questions.map((qq, i) => `<div><dt>${qq.label}</dt><dd>${esc(answers[i] || "")}</dd></div>`).join("")}${isGift() ? `<div><dt>Gift for</dt><dd>${esc(giftFrom.trim() || "Just a surprise")}</dd></div>${giftAbout.trim() ? `<div><dt>About them</dt><dd>${esc(giftAbout)}</dd></div>` : ""}` : ""}${whisper ? `<div><dt>Whisper</dt><dd>${esc(whisper)}</dd></div>` : ""}${avoid ? `<div><dt>Avoid</dt><dd>${esc(avoid)}</dd></div>` : ""}</dl>${ritualApi ? shareChoice() : ""}<div class="ga-actions">${bookingUrl ? btn("kofi", "Continue to Ko-fi →", "primary", 'style="flex:1 1 100%"') : ""}</div><p class="ga-status" role="status">${savedCode ? codeLine(savedCode) : ""}</p><p class="ga-small">${bookingUrl ? "Your answers are already saved here, so there is nothing to paste when you order." : "Keep a copy for when ordering opens."}</p>${btn("edit", "Revisit my answers", "secondary", 'style="width:100%"')}`;
     if (focus) content.querySelector("h2").focus({ preventScroll: true });
     dialog.scrollTop = 0;
   }
@@ -223,23 +214,7 @@
         line.innerHTML = codeLine(code);
         status.append(line);
       } else {
-        status.append(" (The archive could not be reached just now — Download .txt keeps your copy.)");
-      }
-    } else if (action === "download") {
-      const url = URL.createObjectURL(new Blob([transmission()], { type: "text/plain;charset=utf-8" }));
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "ghost-angel-transmission.txt";
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      content.querySelector(".ga-status").textContent = "Download requested.";
-    } else if (action === "copy") {
-      const status = content.querySelector(".ga-status");
-      try {
-        await navigator.clipboard.writeText(transmission());
-        status.textContent = "Transmission copied.";
-      } catch {
-        status.textContent = "Clipboard unavailable. Please use Download .txt instead.";
+        status.append(" (Your answers could not be saved just now.)");
       }
     }
   });
