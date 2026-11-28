@@ -221,7 +221,8 @@ async function handleRitual(request, env, ctx) {
       )
         .bind(...values)
         .run();
-      const lines = safeArray(values[5]).map((answer) => answer.label + ": " + answer.value);
+      const lines = values[3] ? ["Name: " + values[3]] : [];
+      for (const answer of safeArray(values[5])) lines.push(answer.label + ": " + answer.value);
       if (values[10]) lines.push("Whisper: " + values[10]);
       if (values[11]) lines.push("Avoid: " + values[11]);
       if (values[7]) lines.push("A gift" + (values[8] ? " for " + values[8] : "") + (values[9] ? "\nAbout them: " + values[9] : ""));
@@ -389,7 +390,8 @@ function adminPage(rituals, orders) {
   const ritualCard = (ritual) => {
     const answers = safeArray(ritual.answers);
     const order = byRitual.get(ritual.id);
-    const facts = answers.map((answer) => `<div><dt>${esc(answer.label)}</dt><dd>${esc(answer.value)}</dd></div>`).join("");
+    const who = ritual.name ? `<div><dt>Name</dt><dd>${esc(ritual.name)}</dd></div>` : "";
+    const facts = who + answers.map((answer) => `<div><dt>${esc(answer.label)}</dt><dd>${esc(answer.value)}</dd></div>`).join("");
     const extra = [
       ritual.gift ? `<div><dt>Gift for</dt><dd>${esc(ritual.gift_for || "—")}</dd></div>` : "",
       ritual.gift_about ? `<div><dt>About them</dt><dd>${esc(ritual.gift_about)}</dd></div>` : "",
