@@ -10,6 +10,7 @@
   <link rel="preload" as="image" href="./assets/family.webp" fetchpriority="high">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./spirits.css">
+  <link rel="stylesheet" href="./mote.css">
   <script src="./collection.js" defer></script>
   <script src="./archive.js" defer></script>
   <script src="./ritual.js" defer></script>
@@ -130,7 +131,14 @@
 
   <dialog id="entry-dialog" class="modal entry-modal" aria-labelledby="entry-name">
     <div class="entry-layout">
-      <div class="entry-image"><img id="entry-image" alt=""></div>
+      <div class="entry-image"><img id="entry-image" alt="">
+        <div class="entry-real" id="entry-real" hidden>
+          <div class="entry-real-frame">
+            <img id="entry-real-photo" alt="">
+            <span class="glint g1" aria-hidden="true"></span><span class="glint g2" aria-hidden="true"></span><span class="glint g3" aria-hidden="true"></span><span class="glint g4" aria-hidden="true"></span><span class="glint g5" aria-hidden="true"></span><span class="glint g6" aria-hidden="true"></span><span class="glint g7" aria-hidden="true"></span><span class="glint g8" aria-hidden="true"></span><span class="glint g9" aria-hidden="true"></span><span class="glint g10" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
       <div class="entry-copy">
         <button type="button" class="close-modal icon-btn" aria-label="Close character"><svg class="icon"><use href="#i-close"/></svg></button>
         <div class="overline" id="entry-id"></div><h2 id="entry-name"></h2><p class="entry-story" id="entry-story"></p>
