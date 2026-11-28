@@ -66,7 +66,7 @@
     return lines.join("\n");
   };
   const codeLine = (code) => `Your code: <b>${esc(code)}</b>. If your message doesn’t reach me, this is how I’ll find your ritual.`;
-  const shareChoice = () => `<label class="ga-share"><input type="checkbox" id="ga-share"${sharePublic ? " checked" : ""}><span>Share my answers on the wall of spirits</span></label><p class="ga-small ga-share-note">Your five answers, and nothing else.</p>`;
+  const shareChoice = () => `<label class="ga-share"><input type="checkbox" id="ga-share"${sharePublic ? " checked" : ""}><span>Share my answers on the wall of spirits</span></label><p class="ga-small ga-share-note">Your five answers, and nothing else. Leave this unticked and nothing is shared at all — staying private is the default.</p><p class="ga-small ga-share-note">We never publish anything from Ko-fi: the wall shows only the five ritual answers, never the buyer’s name, email, message or amount.${isGift() ? " This is a gift, so who it is for and what you told me about them stay private as well — they never appear on the wall." : ""}</p>`;
   // A quiet copy for the artist. Every failure here is silent: the ritual already
   // works without it, so a stray network problem must never interrupt the hand-off.
   async function saveRitual() {
