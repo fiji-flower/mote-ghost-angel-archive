@@ -24,7 +24,7 @@
       return url.protocol === "https:" ? url.href : "";
     } catch { return ""; }
   })();
-  // Where a finished transmission is kept, so it is not lost if the Ko-fi message never gets pasted.
+  // Where a finished transmission is kept, so it is never lost on the way to an order.
   // Set ritualApi in collection.js to the Worker's address; empty means nothing is saved anywhere.
   const ritualApi = (() => {
     const raw = window.MOTE_ARCHIVE?.offer?.ritualApi;
@@ -111,7 +111,7 @@
       content.innerHTML = `${progress()}<div class="ga-eyebrow">0${step + 1} / 0${total()} — ${q.label}</div>${heading(q.q)}<div class="ga-options" role="group" aria-label="${esc(q.q)}">${q.options.map((o, i) => `<button type="button" class="ga-choice" data-ga-choice="${i}" aria-pressed="${picked === o}"><span>${q.id === "chroma" ? `<span class="ga-swatch" aria-hidden="true">${palettes[i].map((c) => `<i style="background:${c}"></i>`).join("")}</span>` : ""}${esc(o)}</span><span class="ga-mark" aria-hidden="true">${picked === o ? "✧" : "○"}</span></button>`).join("")}</div>${q.id === "habitat" && isGift() ? `<p class="ga-gift-note" role="status">A gift — lovely. There’ll be one optional question about them, near the end.</p>` : ""}<div class="ga-actions">${btn("back", "Back")}${btn("next", "Continue →", "primary", picked === null ? "disabled" : "")}</div>`;
     } else if (key === "recipient") content.innerHTML = `${progress()}<div class="ga-eyebrow">Optional / the recipient</div>${heading("Who is this little spirit for?")}<p>Leave it blank if you would rather keep the surprise. Only you will see this.</p><label for="ga-gift-from">Their name or nickname</label><input id="ga-gift-from" maxlength="120" value="${esc(giftFrom)}" placeholder="Optional"><label for="ga-gift-about">A little about them</label><textarea id="ga-gift-about" maxlength="600" placeholder="What they love, what makes them smile, a private joke…">${esc(giftAbout)}</textarea><div class="ga-actions">${btn("back", "Back")}${btn("next", "Continue →", "primary")}</div>`;
     else if (key === "whisper") content.innerHTML = `${progress()}<div class="ga-eyebrow">Optional / final whisper</div>${heading("Is there anything else the spirit should know?")}<p>A favorite symbol, a little obsession, or something that makes you smile.</p><label for="ga-whisper">A fragment of your universe</label><textarea id="ga-whisper" maxlength="1000" placeholder="Leave a little whisper...">${esc(whisper)}</textarea><label for="ga-avoid">Colors or materials to avoid</label><input id="ga-avoid" maxlength="300" value="${esc(avoid)}" placeholder="Optional"><p class="ga-small" style="margin-top:12px">Share only what you feel comfortable sharing. Your answers inspire the design; they are not exact customization instructions.</p><div class="ga-actions">${btn("back", "Back")}${btn("next", "Complete transmission", "primary")}</div>`;
-    else content.innerHTML = `<div class="ga-center"><div class="ga-sigil" aria-hidden="true">✧</div><div class="ga-eyebrow">Transmission complete${isGift() ? " / a gift, still secret" : ""}</div>${heading(isGift() ? "A little spirit is on its way." : "A little spirit awaits.")}<p>${isGift() ? "Somewhere, someone has no idea that a little spirit is about to enter their life." : "Its name, face and story remain a beautiful mystery."}</p>${isGift() ? '<p class="ga-small">Its name, face and story remain a beautiful mystery.</p>' : ""}</div><dl class="ga-summary">${questions.map((qq, i) => `<div><dt>${qq.label}</dt><dd>${esc(answers[i] || "")}</dd></div>`).join("")}${isGift() ? `<div><dt>Gift for</dt><dd>${esc(giftFrom.trim() || "Just a surprise")}</dd></div>${giftAbout.trim() ? `<div><dt>About them</dt><dd>${esc(giftAbout)}</dd></div>` : ""}` : ""}${whisper ? `<div><dt>Whisper</dt><dd>${esc(whisper)}</dd></div>` : ""}${avoid ? `<div><dt>Avoid</dt><dd>${esc(avoid)}</dd></div>` : ""}</dl>${ritualApi ? shareChoice() : ""}<div class="ga-actions">${bookingUrl ? btn("kofi", "Continue to Ko-fi →", "primary", 'style="flex:1 1 100%"') : ""}${btn("copy", "Copy transmission")}${btn("download", "Download .txt")}</div><p class="ga-status" role="status">${savedCode ? codeLine(savedCode) : ""}</p><p class="ga-small">${bookingUrl ? "Your transmission travels with you: paste it into the message on Ko-fi so Petal Lucent knows which spirit to make." : "Keep a copy for when ordering opens. Nothing has been sent to the artist."}</p>${btn("edit", "Revisit my answers", "secondary", 'style="width:100%"')}`;
+    else content.innerHTML = `<div class="ga-center"><div class="ga-sigil" aria-hidden="true">✧</div><div class="ga-eyebrow">Transmission complete${isGift() ? " / a gift, still secret" : ""}</div>${heading(isGift() ? "A little spirit is on its way." : "A little spirit awaits.")}<p>${isGift() ? "Somewhere, someone has no idea that a little spirit is about to enter their life." : "Its name, face and story remain a beautiful mystery."}</p>${isGift() ? '<p class="ga-small">Its name, face and story remain a beautiful mystery.</p>' : ""}</div><dl class="ga-summary">${questions.map((qq, i) => `<div><dt>${qq.label}</dt><dd>${esc(answers[i] || "")}</dd></div>`).join("")}${isGift() ? `<div><dt>Gift for</dt><dd>${esc(giftFrom.trim() || "Just a surprise")}</dd></div>${giftAbout.trim() ? `<div><dt>About them</dt><dd>${esc(giftAbout)}</dd></div>` : ""}` : ""}${whisper ? `<div><dt>Whisper</dt><dd>${esc(whisper)}</dd></div>` : ""}${avoid ? `<div><dt>Avoid</dt><dd>${esc(avoid)}</dd></div>` : ""}</dl>${ritualApi ? shareChoice() : ""}<div class="ga-actions">${bookingUrl ? btn("kofi", "Continue to Ko-fi →", "primary", 'style="flex:1 1 100%"') : ""}${btn("copy", "Copy transmission")}${btn("download", "Download .txt")}</div><p class="ga-status" role="status">${savedCode ? codeLine(savedCode) : ""}</p><p class="ga-small">${bookingUrl ? "Your answers are already saved here, so there is nothing to paste when you order." : "Keep a copy for when ordering opens."}</p>${btn("edit", "Revisit my answers", "secondary", 'style="width:100%"')}`;
     if (focus) content.querySelector("h2").focus({ preventScroll: true });
     dialog.scrollTop = 0;
   }
@@ -206,15 +206,14 @@
       step = 0;
       render();
     } else if (action === "kofi") {
-      // The tab is opened inside the click so the browser allows it, and the copy is handed over
-      // without waiting: a slow or refused clipboard must never delay the code.
+      // The tab is opened inside the click so the browser allows it. Nothing goes to the clipboard
+      // any more: the answers are already kept, so the buyer has nothing to paste.
       const win = window.open(bookingUrl, "_blank");
       if (win) win.opener = null;
       const status = content.querySelector(".ga-status");
-      try { void navigator.clipboard.writeText(transmission()).catch(() => {}); } catch { /* the Copy button covers it */ }
       status.textContent = win
-        ? "Ko-fi opened in a new tab. Paste your transmission into the message there — Copy transmission puts it back on your clipboard."
-        : "Your browser blocked the new tab. Open " + bookingUrl + " and paste your transmission there — Copy transmission puts it on your clipboard.";
+        ? "Ko-fi opened in a new tab."
+        : "Your browser blocked the new tab. Open " + bookingUrl + " to reach the shop.";
       // Saved whatever happened above: a blocked tab must not cost the buyer their code.
       const code = await saveRitual();
       if (code) {
