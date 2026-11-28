@@ -206,20 +206,16 @@
       step = 0;
       render();
     } else if (action === "kofi") {
-      // Open Ko-fi inside the click, then hand the transmission to the clipboard for its message box.
+      // The tab is opened inside the click so the browser allows it, and the copy is handed over
+      // without waiting: a slow or refused clipboard must never delay the code.
       const win = window.open(bookingUrl, "_blank");
       if (win) win.opener = null;
       const status = content.querySelector(".ga-status");
-      if (!win) {
-        status.textContent = "Your browser blocked the new tab. Open " + bookingUrl + " and paste your transmission there.";
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(transmission());
-        status.textContent = "Ko-fi opened in a new tab. Paste your transmission into the message there.";
-      } catch {
-        status.textContent = "Ko-fi opened in a new tab. Use Copy transmission, then paste it into the message.";
-      }
+      try { void navigator.clipboard.writeText(transmission()).catch(() => {}); } catch { /* the Copy button covers it */ }
+      status.textContent = win
+        ? "Ko-fi opened in a new tab. Paste your transmission into the message there — Copy transmission puts it back on your clipboard."
+        : "Your browser blocked the new tab. Open " + bookingUrl + " and paste your transmission there — Copy transmission puts it on your clipboard.";
+      // Saved whatever happened above: a blocked tab must not cost the buyer their code.
       const code = await saveRitual();
       if (code) {
         savedCode = code;
@@ -227,6 +223,8 @@
         line.className = "ga-code";
         line.innerHTML = codeLine(code);
         status.append(line);
+      } else {
+        status.append(" (The archive could not be reached just now — Download .txt keeps your copy.)");
       }
     } else if (action === "download") {
       const url = URL.createObjectURL(new Blob([transmission()], { type: "text/plain;charset=utf-8" }));
