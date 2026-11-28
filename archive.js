@@ -121,17 +121,54 @@
       dialogTrigger = null;
     });
   }
+  const realLayer = $("entry-real");
+  const realPhoto = $("entry-real-photo");
+  const realFrame = document.querySelector(".entry-real-frame");
+  // The frame hugs the photograph: no cropping, and no dead space around it.
+  function fitReal() {
+    if (!realLayer || !realFrame || !realPhoto.naturalWidth) return;
+    const bounds = realLayer.getBoundingClientRect();
+    const style = getComputedStyle(realLayer);
+    const available = [
+      bounds.width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+      bounds.height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom)
+    ];
+    if (available[0] < 1 || available[1] < 1) return;
+    const scale = Math.min(available[0] / realPhoto.naturalWidth, available[1] / realPhoto.naturalHeight);
+    realFrame.style.width = Math.round(realPhoto.naturalWidth * scale) + "px";
+    realFrame.style.height = Math.round(realPhoto.naturalHeight * scale) + "px";
+  }
+  realPhoto?.addEventListener("load", fitReal);
+  window.addEventListener("resize", fitReal);
+  function showReal(entry) {
+    if (!entry.realImage) {
+      realLayer.classList.remove("is-in");
+      realLayer.hidden = true;
+      realPhoto.removeAttribute("src");
+      return;
+    }
+    realPhoto.src = entry.realImage;
+    realPhoto.alt = entry.realAlt || entry.alt;
+    realLayer.hidden = false;
+    if (realPhoto.complete) fitReal();
+    realLayer.classList.remove("is-in");
+    void realLayer.offsetWidth;
+    requestAnimationFrame(() => { fitReal(); realLayer.classList.add("is-in"); });
+  }
   function showEntry(index) {
     viewed = index;
     const entry = readEntries[viewed];
     $("entry-image").src = entry.image;
     $("entry-image").alt = entry.alt;
+    showReal(entry);
     $("entry-id").textContent = entry.id + "  /  " + entry.kind;
     $("entry-name").textContent = entry.name;
     $("entry-story").textContent = entry.story;
     $("entry-palette").textContent = entry.palette;
     $("entry-detail").textContent = entry.detail;
-    $("entry-credit").textContent = entry.credit;
+    const credit = $("entry-credit");
+    credit.textContent = entry.credit || "";
+    credit.hidden = !entry.credit;
     $("entry-position").textContent = (viewed + 1) + " / " + readEntries.length;
     $("prev-entry").disabled = viewed === 0;
     $("next-entry").disabled = viewed === readEntries.length - 1;
@@ -159,12 +196,30 @@
     card.dataset.tone = entry.tone || "lilac";
     const visual = el("span", "card-art");
     const image = document.createElement("img");
-    image.src = entry.image;
-    image.alt = entry.alt;
-    image.width = 600;
-    image.height = 600;
     image.loading = "lazy";
-    visual.append(image, el("span", "card-id", entry.id.replace("-", "–")));
+    if (entry.realImage) {
+      // The founding ghost is the only card showing the actual plush: whole, inside
+      // a frame that breathes, throws a slow sheen and gives off a few sparks.
+      visual.classList.add("card-art-real");
+      const frame = el("span", "card-real-frame");
+      image.src = entry.realImage;
+      image.alt = entry.realAlt || entry.alt;
+      image.width = 1200;
+      image.height = 948;
+      frame.append(image);
+      image.addEventListener("load", () => {
+        frame.style.setProperty("--real-ratio", image.naturalWidth + " / " + image.naturalHeight);
+      });
+      visual.append(frame);
+      for (const n of [1, 2, 3, 4, 5, 6, 7, 8]) visual.append(el("span", "glint card-glint c" + n));
+    } else {
+      image.src = entry.image;
+      image.alt = entry.alt;
+      image.width = 600;
+      image.height = 600;
+      visual.append(image);
+    }
+    visual.append(el("span", "card-id", entry.id.replace("-", "–")));
     const details = el("span", "card-info");
     const titles = el("span", "card-titles");
     titles.append(el("span", "card-name", entry.name), el("span", "card-kind", entry.kind));
