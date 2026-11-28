@@ -6,8 +6,8 @@
      GET  /public   rituals people chose to share, for the site's wall
      GET  /admin    every ritual and order, behind ?key=
 
-   The two keys, ADMIN_KEY and KOFI_TOKEN, may be set as Worker secrets or stored in
-   the database's settings table (see withStoredKeys). The environment wins.
+   The keys, ADMIN_KEY, KOFI_TOKEN, EMAIL_API_KEY and NOTIFY_TO, may be set as Worker secrets
+   or stored in the database's settings table (see withStoredKeys). The environment wins.
    Variables (wrangler.toml): SHOP_ITEM_CODE */
 
 const CODE_ALPHABET = "ACDEFGHJKLMNPQRTUVWXY34679";
@@ -89,14 +89,14 @@ function ensureSchema(env) {
   return schemaReady;
 }
 
-/* The two keys may live in the database instead of the dashboard, whose Variables and
+/* The keys may live in the database instead of the dashboard, whose Variables and
    Secrets panel does not always reach a Worker built from Git. The D1 console can
    always write them:
 
      INSERT INTO settings (k, v) VALUES ('admin_key', 'a phrase of your own');
 
    A value in the environment wins, so setting a real secret later needs no change. */
-const SETTING_NAMES = { admin_key: "ADMIN_KEY", kofi_token: "KOFI_TOKEN" };
+const SETTING_NAMES = { admin_key: "ADMIN_KEY", kofi_token: "KOFI_TOKEN", email_api_key: "EMAIL_API_KEY", notify_to: "NOTIFY_TO", notify_from: "NOTIFY_FROM" };
 const SETTINGS_TTL = 60 * 1000;
 let settingsCache = { at: 0, values: {} };
 
@@ -117,13 +117,32 @@ async function withStoredKeys(env) {
     }
   }
   const values = settingsCache.values;
-  if (!values.ADMIN_KEY && !values.KOFI_TOKEN) return env;
+  if (!Object.keys(values).length) return env;
   return new Proxy(env, {
     get(target, prop) {
       if (typeof prop === "string" && values[prop] && !target[prop]) return values[prop];
       return target[prop];
     }
   });
+}
+
+/* A short email to the artist when something arrives, so the admin page does not have to be
+   watched. Resend's free plan sends to the address the account was opened with, which is all
+   a notification needs; nothing waits for it, and a refused email never affects the answer. */
+async function notify(env, ctx, subject, body) {
+  if (!env.EMAIL_API_KEY || !env.NOTIFY_TO) return;
+  const sending = fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { authorization: "Bearer " + env.EMAIL_API_KEY, "content-type": "application/json" },
+    body: JSON.stringify({
+      from: env.NOTIFY_FROM || "Ghost Angel Archive <onboarding@resend.dev>",
+      to: [env.NOTIFY_TO],
+      subject,
+      text: body
+    })
+  }).catch(() => null);
+  if (ctx && ctx.waitUntil) ctx.waitUntil(sending);
+  else await sending;
 }
 
 function makeCode() {
@@ -152,7 +171,7 @@ async function readJson(request) {
   }
 }
 
-async function handleRitual(request, env) {
+async function handleRitual(request, env, ctx) {
   const body = await readJson(request);
   if (!body) return json({ error: "unreadable" }, 400);
 
@@ -202,6 +221,12 @@ async function handleRitual(request, env) {
       )
         .bind(...values)
         .run();
+      const lines = safeArray(values[5]).map((answer) => answer.label + ": " + answer.value);
+      if (values[10]) lines.push("Whisper: " + values[10]);
+      if (values[11]) lines.push("Avoid: " + values[11]);
+      if (values[7]) lines.push("A gift" + (values[8] ? " for " + values[8] : "") + (values[9] ? "\nAbout them: " + values[9] : ""));
+      lines.push("", values[12] ? "Shared on the wall." : "Kept private.");
+      notify(env, ctx, "New ritual " + values[1], lines.join("\n"));
       return json({ code: values[1] });
     } catch {
       // Almost always a code collision; a fresh code is drawn and tried again.
@@ -256,7 +281,7 @@ async function matchRitual(env, order) {
   return recent ? { id: recent.id, kind: "time" } : null;
 }
 
-async function handleKofi(request, env) {
+async function handleKofi(request, env, ctx) {
   const raw = await request.text();
   if (raw.length > MAX_BODY) return text("too large", 413);
   const payload = parseKofi(raw);
@@ -309,6 +334,19 @@ async function handleKofi(request, env) {
   if (match) {
     await env.DB.prepare("UPDATE rituals SET order_id = ? WHERE id = ?").bind(order.id, match.id).run();
   }
+  notify(
+    env,
+    ctx,
+    "Ko-fi order: " + order.amount + " " + order.currency,
+    [
+      order.fromName || "Someone",
+      order.email,
+      order.message,
+      match ? "Matched a ritual by " + match.kind + "." : "No ritual matched yet — open the admin page."
+    ]
+      .filter(Boolean)
+      .join("\n")
+  );
   return text("ok", 200);
 }
 
@@ -429,7 +467,7 @@ async function handleAdmin(url, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
     env = await withStoredKeys(env);
     const url = new URL(request.url);
@@ -438,8 +476,8 @@ export default {
       if (path === "/") return text("Ghost Angel Archive worker is awake.");
       if (path !== "/ritual" && path !== "/kofi" && path !== "/public" && path !== "/admin") return text("not found", 404);
       await ensureSchema(env);
-      if (path === "/ritual" && request.method === "POST") return await handleRitual(request, env);
-      if (path === "/kofi" && request.method === "POST") return await handleKofi(request, env);
+      if (path === "/ritual" && request.method === "POST") return await handleRitual(request, env, ctx);
+      if (path === "/kofi" && request.method === "POST") return await handleKofi(request, env, ctx);
       if (path === "/public" && request.method === "GET") return await handlePublic(env);
       if (path === "/admin" && request.method === "GET") return await handleAdmin(url, env);
       return text("not found", 404);
