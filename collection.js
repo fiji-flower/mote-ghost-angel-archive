@@ -12,7 +12,7 @@ window.MOTE_ARCHIVE = {
     bookingUrl: "https://ko-fi.com/s/2df1ab1b45",
     artistEmail: "",
     // The Cloudflare Worker that keeps a copy of each transmission. Leave empty to turn saving off.
-    ritualApi: "",
+    ritualApi: "https://mote-ghost-angel-archive.1133annasun.workers.dev",
     // How many shared transmissions the wall shows at most.
     wallLimit: 9
   },
