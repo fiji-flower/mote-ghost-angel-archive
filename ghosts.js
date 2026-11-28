@@ -33,7 +33,8 @@
       ["Habitat", fact(answers, "Habitat")],
       ["Universe", fact(answers, "Chromatic signal")],
       ["Relic", fact(answers, "Relic")],
-      ["Frequency", fact(answers, "Frequency")]
+      ["Frequency", fact(answers, "Frequency")],
+      ["Scent", fact(answers, "Scent")]
     ].filter((row) => row[1]);
     if (!rows.length) return "";
     const resonance = fact(answers, "Resonance");

@@ -52,7 +52,7 @@
     $("slots").append(slot);
   });
   if (canInquire) {
-    $("booking-note").textContent = "Answer five questions, then finish on Ko-fi. " + artist + " receives your transmission with the order.";
+    $("booking-note").textContent = "Answer six questions, then finish on Ko-fi. " + artist + " receives your transmission with the order.";
   } else if (!openSlots) {
     $("booking-note").textContent = "Every spirit in this release has found a home. The ritual still works, so you can keep your answers for the next opening.";
   }
