@@ -20,10 +20,12 @@ window.MOTE_ARCHIVE = {
     {
       id: "GA-000", name: "Moté", group: "Founder", kind: "Founding ghost",
       image: "assets/mote.webp", tone: "mint",
+      // The hand-sewn original, shown whole in a framed print on the card and in the panel.
+      realImage: "assets/ghost-angel-mote.jpg",
+      realAlt: "Moté, the hand-sewn original, photographed from above with her pink wings spread on a dark table, wire halo and pink flower at her brow.",
       alt: "An ivory ghost with sleepy stitched eyes and a crooked silver halo in a pale mint setting.",
       story: "Before there was a family, there was a scrap of pale fabric, two sleepy stitched eyes, and a halo held on by hand. Moté is the little ghost who started the archive.",
       detail: "Hand-wrapped halo", palette: "Pearl mint",
-      credit: "AI-assisted concept study based on Petal Lucent’s original hand-sewn Moté."
     },
     {
       id: "GA-001", name: "Velvet Static", group: "Family", kind: "Ghost angel",
